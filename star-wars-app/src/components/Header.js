@@ -1,23 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import homeIcon from "../assets/home.png"; // Assegura't que la imatge estigui a la carpeta indicada
 
-
-function Header() 
-{
+function Header() {
   return (
     <header>
-      <h1>Star Wars Universe</h1>
-      <nav>
-        <ul>
-          <li><Link to="/">Home</Link></li>
-          <li><Link to="/films">Films</Link></li>
-          <li><Link to="/characters">Characters</Link></li>
-          <li><Link to="/planets">Planets</Link></li>
-          <li><Link to="/species">Species</Link></li>
-          <li><Link to="/starships">Starships</Link></li>
-          <li><Link to="/favorites">Favorites</Link></li>
-        </ul>
-      </nav>
+      <div className="header-container">
+        <Link to="/">
+          <img src={homeIcon} alt="Home" className="home-icon" />
+        </Link>
+        <h1>Star Wars Universe</h1>
+      </div>
     </header>
   );
 }

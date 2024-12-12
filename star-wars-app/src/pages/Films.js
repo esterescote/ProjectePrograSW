@@ -4,6 +4,7 @@ import { FavoritesContext } from '../context/FavoritesContext';
 function Films() 
 {
   const [films, setFilms] = useState([]);  // Estat per emmagatzemar la llista de pel·lícules
+  const [expandedFilm, setExpandedFilm] = useState(null); // Estat per controlar el personatge expandit
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   // useEffect per carregar les pel·lícules automàticament quan es renderitza el component
@@ -13,7 +14,14 @@ function Films()
       .then((data) => setFilms(data.results))
       .catch((error) => console.error('Error fetching films:', error));
   }, []);
-
+ // Funció per alternar la visibilitat de les dades del personatge
+ const toggleExpand = (filmName) => {
+  if (expandedFilm === filmName) {
+    setExpandedFilm(null); // Si ja està expandit, el tanquem
+  } else {
+    setExpandedFilm(filmName); // Si no està expandit, l'obrim
+  }
+};
   return (
     <div>
       <h2>FILMS</h2>

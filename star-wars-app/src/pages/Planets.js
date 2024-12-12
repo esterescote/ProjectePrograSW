@@ -6,6 +6,7 @@ function Planets()
 {
   const [planets, setPlanets] = useState([]);  // Estat per emmagatzemar la llista
   const [loading, setLoading] = useState(true); // Estat de càrrega
+  const [expandedPlanets, setExpandedPlanets] = useState(null); // Estat per controlar el personatge expandit
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   // useEffect per carregar automàticament quan es renderitza el component
@@ -70,7 +71,14 @@ function Planets()
     });
   }, []); // L'array buit fa que només es faci la crida un cop quan el component es renderitza
       
-
+  // Funció per alternar la visibilitat de les dades del personatge
+  const toggleExpand = (planetName) => {
+    if (expandedPlanets === planetName) {
+      setExpandedPlanets(null); // Si ja està expandit, el tanquem
+    } else {
+      setExpandedPlanets(planetName); // Si no està expandit, l'obrim
+    }
+  };
   return (
     <div>
       <h2>PLANETS</h2>
@@ -80,33 +88,39 @@ function Planets()
           <ul>
             {planets.map((planet) => (
               <li key={planet.url}>
-                <h3>{planet.name}</h3>
-                <p>Diameter: {planet.diameter}</p>
-                <p>Rotation period: {planet.rotation_period}</p>
-                <p>Orbital period: {planet.orbital_period}</p>
-                <p>Gravity: {planet.gravity}</p>
-                <p>Population: {planet.population}</p>
-                <p>Climate: {planet.climate}</p>
-                <p>Terrain: {planet.terrain}</p>
-                <p>Surface water: {planet.surface_water}</p>
-                <p>Residents:</p>
-                  <ul>
-                    {
-                      planet.residents.length > 0 ? (
-                        planet.residents.map((residentName, index) => (
-                          <li key={index}>{residentName}</li>
-                        ))
-                      ) : (<p>No residents available</p>)
-                    }
-                  </ul>
-                <p>Films:</p>
-                  <ul>
-                    {
-                      planet.films.length > 0 ? (
-                        planet.films.map((filmTitle, index) => (<li key={index}>{filmTitle}</li>))
-                      ) : (<p>No films available</p>)
-                    }
-                  </ul>
+                <h3 onClick={() => toggleExpand(planet.name)} style={{ cursor: 'pointer'}}>
+                {planet.name}
+              </h3>
+              {expandedPlanets === planet.name && (
+                <div>
+                  <p>Diameter: {planet.diameter}</p>
+                  <p>Rotation period: {planet.rotation_period}</p>
+                  <p>Orbital period: {planet.orbital_period}</p>
+                  <p>Gravity: {planet.gravity}</p>
+                  <p>Population: {planet.population}</p>
+                  <p>Climate: {planet.climate}</p>
+                  <p>Terrain: {planet.terrain}</p>
+                  <p>Surface water: {planet.surface_water}</p>
+                  <p>Residents:</p>
+                    <ul>
+                      {
+                        planet.residents.length > 0 ? (
+                          planet.residents.map((residentName, index) => (
+                            <li key={index}>{residentName}</li>
+                          ))
+                        ) : (<p>No residents available</p>)
+                      }
+                    </ul>
+                  <p>Films:</p>
+                    <ul>
+                      {
+                        planet.films.length > 0 ? (
+                          planet.films.map((filmTitle, index) => (<li key={index}>{filmTitle}</li>))
+                        ) : (<p>No films available</p>)
+                      }
+                    </ul>
+                </div>
+              )}
                   <button
                 onClick={() => toggleFavorite(planet)}
                 style={{

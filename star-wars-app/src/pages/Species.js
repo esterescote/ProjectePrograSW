@@ -6,6 +6,7 @@ function Species()
 {
   const [species, setSpecies] = useState([]); 
   const [loading, setLoading] = useState(true);
+  const [expandedSpecies, setExpandedSpecies] = useState(null);
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   // useEffect per carregar automàticament quan es renderitza el component
@@ -46,6 +47,15 @@ function Species()
       });
   }, []);
 
+  // Funció per alternar la visibilitat de les dades del personatge
+  const toggleExpand = (speciesName) => {
+    if (expandedSpecies === speciesName) {
+      setExpandedSpecies(null); // Si ja està expandit, el tanquem
+    } else {
+      setExpandedSpecies(speciesName); // Si no està expandit, l'obrim
+    }
+  };
+
   return (
     <div>
       <h2>SPECIES</h2>
@@ -55,7 +65,11 @@ function Species()
             species.map((specie) => 
             (
               <li key={specie.url}>
-                <h3>{specie.name}</h3>
+                <h3 onClick={() => toggleExpand(specie.name)} style={{ cursor: 'pointer'}}>
+                {specie.name}
+              </h3>
+              {expandedSpecies === specie.name && (
+                <div>
                 <p>Classification: {specie.classification}</p>
                 <p>Designation: {specie.designation}</p>
                 <p>Average height: {specie.average_height} cm</p>
@@ -65,6 +79,8 @@ function Species()
                 <p>Average lifespan: {specie.average_lifespan} years</p>
                 <p>Language: {specie.language}</p>
                 <p>Homeworld: {specie.homeworld}</p>
+                </div>
+              )}
                 <button
                 onClick={() => toggleFavorite(specie)}
                 style={{
