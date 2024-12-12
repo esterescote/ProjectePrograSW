@@ -11,14 +11,7 @@ import Characters from './pages/Characters'; // Això també ho crearem més end
 import Planets from './pages/Planets';
 import Species from './pages/Species';
 import Starships from './pages/Starships';
-//import Favorites from './pages/Favorites';
-
-ReactDOM.render(
-  <FavoritesProvider>
-      <App />
-  </FavoritesProvider>,
-  document.getElementById('root')
-);
+import Favorites from './components/Favorites';
 
 function App() 
 {
@@ -33,6 +26,7 @@ function App()
         <Route path="/planets" element={<Planets />} />
         <Route path="/species" element={<Species />} />
         <Route path="/starships" element={<Starships />} />
+        <Route path="/favorites" element={<Favorites />} />
       </Routes>
       <Footer />
     </Router>
