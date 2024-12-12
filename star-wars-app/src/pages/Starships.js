@@ -1,12 +1,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
-
+import { useLocation } from 'react-router-dom';
 
 function Starships() 
 {
   const [starships, setStarships] = useState([]);
   const [loading, setLoading] = useState(true); 
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
+
+  const location = useLocation();
+  const selectedStarship = location.state?.selectedStarship || null;
 
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 

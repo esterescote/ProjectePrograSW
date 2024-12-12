@@ -1,14 +1,20 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
+import { useLocation } from 'react-router-dom';
 
 function Films() 
 {
   const [films, setFilms] = useState([]);  // Estat per emmagatzemar la llista de pel·lícules
+  const [loading, setLoading] = useState(true);
   const [expandedFilm, setExpandedFilm] = useState(null); // Estat per controlar el personatge expandit
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
+  const location = useLocation();
+  const selectedFilm = location.state?.selectedFilm || null;
+
   // useEffect per carregar les pel·lícules automàticament quan es renderitza el component
-  useEffect(() => {
+  useEffect(() => 
+  {
     fetch('https://swapi.dev/api/films/')
       .then((response) => response.json())
       .then((data) => setFilms(data.results))
@@ -22,6 +28,7 @@ function Films()
     setExpandedFilm(filmName); // Si no està expandit, l'obrim
   }
 };
+
   return (
     <div>
       <h2>FILMS</h2>

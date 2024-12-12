@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
-
+import { useLocation } from 'react-router-dom';
 
 function Species() 
 {
@@ -8,6 +8,9 @@ function Species()
   const [loading, setLoading] = useState(true);
   const [expandedSpecies, setExpandedSpecies] = useState(null);
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
+
+  const location = useLocation();
+  const selectedSpecie = location.state?.selectedSpecie || null;
 
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 

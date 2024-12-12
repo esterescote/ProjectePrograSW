@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
-
+import { useLocation } from 'react-router-dom';
 
 function Planets() 
 {
@@ -8,6 +8,9 @@ function Planets()
   const [loading, setLoading] = useState(true); // Estat de càrrega
   const [expandedPlanets, setExpandedPlanets] = useState(null); // Estat per controlar el personatge expandit
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
+
+  const location = useLocation();
+  const selectedPlanet = location.state?.selectedPlanet || null;
 
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 
@@ -79,6 +82,7 @@ function Planets()
       setExpandedPlanets(planetName); // Si no està expandit, l'obrim
     }
   };
+  
   return (
     <div>
       <h2>PLANETS</h2>
@@ -86,44 +90,46 @@ function Planets()
           <p>Loading planets...</p> 
         ) : (
           <ul>
-            {planets.map((planet) => (
-              <li key={planet.url}>
+            {
+              planets.map((planet) => (
+                <li key={planet.url}>
                 <h3 onClick={() => toggleExpand(planet.name)} style={{ cursor: 'pointer'}}>
-                {planet.name}
-              </h3>
-              {expandedPlanets === planet.name && (
-                <div>
-                  <p>Diameter: {planet.diameter}</p>
-                  <p>Rotation period: {planet.rotation_period}</p>
-                  <p>Orbital period: {planet.orbital_period}</p>
-                  <p>Gravity: {planet.gravity}</p>
-                  <p>Population: {planet.population}</p>
-                  <p>Climate: {planet.climate}</p>
-                  <p>Terrain: {planet.terrain}</p>
-                  <p>Surface water: {planet.surface_water}</p>
-                  <p>Residents:</p>
-                    <ul>
-                      {
-                        planet.residents.length > 0 ? (
-                          planet.residents.map((residentName, index) => (
-                            <li key={index}>{residentName}</li>
-                          ))
-                        ) : (<p>No residents available</p>)
-                      }
-                    </ul>
-                  <p>Films:</p>
-                    <ul>
-                      {
-                        planet.films.length > 0 ? (
-                          planet.films.map((filmTitle, index) => (<li key={index}>{filmTitle}</li>))
-                        ) : (<p>No films available</p>)
-                      }
-                    </ul>
-                </div>
-              )}
+                  {planet.name}
+                </h3>
+                {expandedPlanets === planet.name && (
+                  <div>
+                    <p>Diameter: {planet.diameter}</p>
+                    <p>Rotation period: {planet.rotation_period}</p>
+                    <p>Orbital period: {planet.orbital_period}</p>
+                    <p>Gravity: {planet.gravity}</p>
+                    <p>Population: {planet.population}</p>
+                    <p>Climate: {planet.climate}</p>
+                    <p>Terrain: {planet.terrain}</p>
+                    <p>Surface water: {planet.surface_water}</p>
+                    <p>Residents:</p>
+                      <ul>
+                        {
+                          planet.residents.length > 0 ? (
+                            planet.residents.map((residentName, index) => (
+                              <li key={index}>{residentName}</li>
+                            ))
+                          ) : (<p>No residents available</p>)
+                        }
+                      </ul>
+                    <p>Films:</p>
+                      <ul>
+                        {
+                          planet.films.length > 0 ? (
+                            planet.films.map((filmTitle, index) => (<li key={index}>{filmTitle}</li>))
+                          ) : (<p>No films available</p>)
+                        }
+                      </ul>
+                  </div>
+                )
+            }
                   <button
                 onClick={() => toggleFavorite(planet)}
-                style={{
+                style = {{
                   backgroundColor: favorites.some((fav) => fav.url === planet.url)
                     ? 'red'
                     : 'gray',

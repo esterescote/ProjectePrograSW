@@ -1,51 +1,70 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
+import { useLocation } from 'react-router-dom';
 
-function Characters() {
+function Characters() 
+{
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [expandedCharacter, setExpandedCharacter] = useState(null); // Estat per controlar el personatge expandit
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
+  const location = useLocation();
+  const selectedCharacter = location.state?.selectedCharacter || null;
+
   // useEffect per carregar automàticament quan es renderitza el component
-  useEffect(() => {
-    fetch('https://swapi.dev/api/people/')  // Fetch a l'API per obtenir la llista de personatges
-      .then((response) => response.json())  // Convertir la resposta a JSON
-      .then((data) => {
+  useEffect(() => 
+  {
+    // Crida inicial per obtenir els personatges
+    fetch('https://swapi.dev/api/people/')
+      .then((response) => response.json())
+      .then((data) => 
+      {
         // Per cada personatge, buscar la informació dels films
-        const fetchFilmsPromises = data.results.map((character) => {
-          const filmsPromises = character.films.map((url) =>
-            fetch(url).then((response) => response.json())
-          );
-          return Promise.all(filmsPromises).then((films) => {
+        const fetchFilmsPromises = data.results.map((character) => 
+        {
+          const filmsPromises = character.films.map((url) => fetch(url).then((response) => response.json()));
+          
+          return Promise.all(filmsPromises).then((films) => 
+          {
             return { ...character, films: films.map((film) => film.title) };
           });
         });
 
         // Esperar que totes les crides als films es compleixin abans de continuar
         Promise.all(fetchFilmsPromises)
-          .then((updatedCharacters) => {
+          .then((updatedCharacters) => 
+          {
             setCharacters(updatedCharacters); // Actualitzar l'estat amb els personatges i els films
             setLoading(false); // Finalitzar la càrrega
+
+            // Expandir automàticament el personatge seleccionat si n'hi ha
+            if (selectedCharacter) 
+            {
+              const matchingCharacter = updatedCharacters.find((char) => char.name === selectedCharacter.name);
+              if (matchingCharacter) 
+              {
+                setExpandedCharacter(matchingCharacter.name);
+              }
+            }
           })
-          .catch((error) => {
+          .catch((error) => 
+          {
             console.error('Error fetching films:', error);
             setLoading(false); // Finalitzar la càrrega en cas d'error
           });
       })
-      .catch((error) => {
+      .catch((error) => 
+      {
         console.error('Error fetching Characters:', error);
         setLoading(false); // Finalitzar la càrrega en cas d'error
       });
-  }, []);
+  }, [selectedCharacter]);
 
   // Funció per alternar la visibilitat de les dades del personatge
-  const toggleExpand = (characterName) => {
-    if (expandedCharacter === characterName) {
-      setExpandedCharacter(null); // Si ja està expandit, el tanquem
-    } else {
-      setExpandedCharacter(characterName); // Si no està expandit, l'obrim
-    }
+  const toggleExpand = (characterName) => 
+  {
+    setExpandedCharacter((prev) => (prev === characterName ? null : characterName));
   };
 
   return (
@@ -53,13 +72,16 @@ function Characters() {
       <h2>CHARACTERS</h2>
       {loading ? (<p>Loading characters...</p>) : (
         <ul>
-          {characters.map((character) => (
+          {characters.map((character) => 
+          (
             <li key={character.url}>
               <h3 onClick={() => toggleExpand(character.name)} style={{ cursor: 'pointer'}}>
                 {character.name}
               </h3>
+
               {/* Mostrar la resta de la informació només si aquest personatge està expandit */}
-              {expandedCharacter === character.name && (
+              {expandedCharacter === character.name && 
+              (
                 <div>
                   <p>Height: {character.height} cm</p>
                   <p>Mass: {character.mass} kg</p>
@@ -70,13 +92,17 @@ function Characters() {
                   <p>Gender: {character.gender}</p>
                   <p>Films:</p>
                   <ul>
-                    {character.films.length > 0 ? (
-                      character.films.map((filmTitle, index) => (<li key={index}>{filmTitle}</li>))
-                    ) : (<p>No films available</p>)}
+                    {
+                      character.films.length > 0 ? (
+                        character.films.map((filmTitle, index) => (<li key={index}>{filmTitle}</li>))
+                    ) : (<p>No films available</p>)
+                    }
                   </ul>
                 </div>
               )}
+
               <button 
+              onClick={() => toggleFavorite(character)}
               style={{
                 backgroundColor: favorites.some((fav) => fav.url === character.url)
                   ? 'red'

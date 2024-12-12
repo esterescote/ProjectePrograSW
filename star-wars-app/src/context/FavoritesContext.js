@@ -2,16 +2,27 @@ import React, { createContext, useState, useEffect } from 'react';
 
 export const FavoritesContext = createContext();
 
-export const FavoritesProvider = ({ children }) => {
+export const FavoritesProvider = ({ children }) => 
+{
     const [favorites, setFavorites] = useState([]);
 
     // Afegir o eliminar un favorit
-    const toggleFavorite = (item) => {
-        setFavorites((prevFavorites) =>
-            prevFavorites.some((fav) => fav.url === item.url)
-                ? prevFavorites.filter((fav) => fav.url !== item.url)
-                : [...prevFavorites, item]
-        );
+    const toggleFavorite = (item) => 
+    {
+        if (favorites.some((fav) => fav.url === item.url)) 
+        {
+            setFavorites(favorites.filter((fav) => fav.url !== item.url));
+        } 
+        else 
+        {
+            setFavorites([...favorites, item]);
+        }
+    };
+
+    // Funció per esborrar tots els favorits
+    const clearFavorites = () => 
+    {  
+        setFavorites([]);  // Netegem la llista de favorits
     };
 
     // Carregar favorits des de localStorage al muntar
@@ -26,7 +37,7 @@ export const FavoritesProvider = ({ children }) => {
     }, [favorites]);
 
     return (
-        <FavoritesContext.Provider value={{ favorites, toggleFavorite }}>
+        <FavoritesContext.Provider value={{ favorites, toggleFavorite, clearFavorites  }}>
             {children} {/* Això permet que els components "fills" accedeixin al context */}
         </FavoritesContext.Provider>
     );
