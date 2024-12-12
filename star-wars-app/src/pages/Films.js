@@ -1,23 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { FavoritesContext } from '../context/FavoritesContext';
 
 function Films() 
 {
   const [films, setFilms] = useState([]);  // Estat per emmagatzemar la llista de pel·lícules
+  const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   // useEffect per carregar les pel·lícules automàticament quan es renderitza el component
-  useEffect(() => 
-  {
-    fetch('https://swapi.dev/api/films/')    // Fetch a l'API de films
-      .then((response) => response.json())  // Convertir la resposta a JSON
-      .then((data) => 
-      {
-        setFilms(data.results);            // Guardar les pel·lícules a l'estat
-      })
-      .catch((error) => 
-      {
-        console.error('Error fetching films:', error);
-      });
-  }, []); // L'array buit fa que només es faci la crida un cop quan el component es renderitza
+  useEffect(() => {
+    fetch('https://swapi.dev/api/films/')
+      .then((response) => response.json())
+      .then((data) => setFilms(data.results))
+      .catch((error) => console.error('Error fetching films:', error));
+  }, []);
 
   return (
     <div>
@@ -32,9 +27,25 @@ function Films()
                 <p>Director: {film.director}</p>
                 <p>Producer: {film.producer}</p>
                 <p>Release Date: {film.release_date}</p>
+                <button
+                onClick={() => toggleFavorite(film)}
+                style={{
+                  backgroundColor: favorites.some((fav) => fav.url === film.url)
+                    ? 'red'
+                    : 'gray',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {favorites.some((fav) => fav.url === film.url)
+                  ? 'Remove from Favorites'
+                  : 'Add to Favorites'}
+              </button>
               </li>
-            ))
-          }
+          ))}
         </ul>
       ) : (
         <p>Loading films...</p>
