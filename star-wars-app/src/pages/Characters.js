@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { FavoritesContext } from '../context/FavoritesContext';
 
 function Characters() 
 {
-  const [characters, setCharacters] = useState([]);  // Estat per emmagatzemar la llista de personatges
-  const [loading, setLoading] = useState(true); // Estat de càrrega
+  const [characters, setCharacters] = useState([]);
+  const [loading, setLoading] = useState(true); 
+  const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 
@@ -68,6 +70,23 @@ function Characters()
                       ) : (<p>No films available</p>)
                     }
                   </ul>
+                  <button
+                onClick={() => toggleFavorite(character)}
+                style={{
+                  backgroundColor: favorites.some((fav) => fav.url === character.url)
+                    ? 'red'
+                    : 'gray',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {favorites.some((fav) => fav.url === character.url)
+                  ? 'Remove from Favorites'
+                  : 'Add to Favorites'}
+              </button>
               </li>))
             }
         </ul>)

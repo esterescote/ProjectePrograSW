@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { FavoritesContext } from '../context/FavoritesContext';
+
 
 function Planets() 
 {
   const [planets, setPlanets] = useState([]);  // Estat per emmagatzemar la llista
   const [loading, setLoading] = useState(true); // Estat de càrrega
+  const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 
@@ -104,6 +107,23 @@ function Planets()
                       ) : (<p>No films available</p>)
                     }
                   </ul>
+                  <button
+                onClick={() => toggleFavorite(planet)}
+                style={{
+                  backgroundColor: favorites.some((fav) => fav.url === planet.url)
+                    ? 'red'
+                    : 'gray',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {favorites.some((fav) => fav.url === planet.url)
+                  ? 'Remove from Favorites'
+                  : 'Add to Favorites'}
+              </button>
               </li>))
             }
           </ul>

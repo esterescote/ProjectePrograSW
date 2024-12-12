@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { FavoritesContext } from '../context/FavoritesContext';
+
 
 function Starships() 
 {
-  const [starships, setStarships] = useState([]);  // Estat per emmagatzemar la llista de naus
-  const [loading, setLoading] = useState(true); // Estat de càrrega
+  const [starships, setStarships] = useState([]);
+  const [loading, setLoading] = useState(true); 
+  const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 
@@ -42,6 +45,23 @@ function Starships()
                 <p>Cargo capacity: {starship.cargo_capacity} kg</p>
                 <p>Consumables: {starship.consumables}</p>
                 <p>Starship class: {starship.starship_class}</p>
+                <button
+                onClick={() => toggleFavorite(starship)}
+                style={{
+                  backgroundColor: favorites.some((fav) => fav.url === starship.url)
+                    ? 'red'
+                    : 'gray',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {favorites.some((fav) => fav.url === starship.url)
+                  ? 'Remove from Favorites'
+                  : 'Add to Favorites'}
+              </button>
               </li>
             ))
           }

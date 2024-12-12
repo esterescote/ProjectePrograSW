@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { FavoritesContext } from '../context/FavoritesContext';
+
 
 function Species() 
 {
-  const [species, setSpecies] = useState([]);  // Estat per emmagatzemar la llista d'espècies
-  const [loading, setLoading] = useState(true); // Estat de càrrega
+  const [species, setSpecies] = useState([]); 
+  const [loading, setLoading] = useState(true);
+  const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 
@@ -62,6 +65,23 @@ function Species()
                 <p>Average lifespan: {specie.average_lifespan} years</p>
                 <p>Language: {specie.language}</p>
                 <p>Homeworld: {specie.homeworld}</p>
+                <button
+                onClick={() => toggleFavorite(specie)}
+                style={{
+                  backgroundColor: favorites.some((fav) => fav.url === specie.url)
+                    ? 'red'
+                    : 'gray',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {favorites.some((fav) => fav.url === specie.url)
+                  ? 'Remove from Favorites'
+                  : 'Add to Favorites'}
+              </button>
               </li>
             ))
           }
