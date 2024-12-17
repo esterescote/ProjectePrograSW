@@ -15,7 +15,7 @@ function Species()
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 
   {
-    fetch('https://swapi.dev/api/species/')
+    fetch('https://swapi.py4e.com/api/species/')
       .then((response) => response.json())
       .then((data) => 
       {

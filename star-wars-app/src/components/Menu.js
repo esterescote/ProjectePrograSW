@@ -12,11 +12,11 @@ function Menu() {
     const fetchData = async () => {
       try {
         const endpoints = [
-          "https://swapi.dev/api/films/",
-          "https://swapi.dev/api/people/",
-          "https://swapi.dev/api/planets/",
-          "https://swapi.dev/api/species/",
-          "https://swapi.dev/api/starships/",
+          "https://swapi.py4e.com/api/films/",
+          "https://swapi.py4e.com/api/people/",
+          "https://swapi.py4e.com/api/planets/",
+          "https://swapi.py4e.com/api/species/",
+          "https://swapi.py4e.com/api/starships/",
         ];
 
         const data = await Promise.all(

@@ -15,7 +15,7 @@ function Planets()
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 
   {
-    fetch('https://swapi.dev/api/planets/')    // Fetch a l'API
+    fetch('https://swapi.py4e.com/api/planets/')    // Fetch a l'API
       .then((response) => response.json())  // Convertir la resposta a JSON
       .then((data) => 
       {

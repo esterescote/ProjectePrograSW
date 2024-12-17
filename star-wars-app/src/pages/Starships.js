@@ -14,7 +14,7 @@ function Starships()
   // useEffect per carregar automàticament quan es renderitza el component
   useEffect(() => 
   {
-    fetch('https://swapi.dev/api/starships/')  // Fetch a l'API per obtenir la llista de naus
+    fetch('https://swapi.py4e.com/api/starships/')  // Fetch a l'API per obtenir la llista de naus
       .then((response) => response.json())  // Convertir la resposta a JSON
       .then((data) => 
       {

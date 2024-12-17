@@ -16,7 +16,7 @@ function Characters()
   useEffect(() => 
   {
     // Crida inicial per obtenir els personatges
-    fetch('https://swapi.dev/api/people/')
+    fetch('https://swapi.py4e.com/api/people/')
       .then((response) => response.json())
       .then((data) => 
       {

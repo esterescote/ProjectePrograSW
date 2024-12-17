@@ -15,7 +15,7 @@ function Films()
   // useEffect per carregar les pel·lícules automàticament quan es renderitza el component
   useEffect(() => 
   {
-    fetch('https://swapi.dev/api/films/')
+    fetch('https://swapi.py4e.com/api/films/')
       .then((response) => response.json())
       .then((data) => setFilms(data.results))
       .catch((error) => console.error('Error fetching films:', error));
