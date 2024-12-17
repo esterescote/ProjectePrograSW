@@ -1,118 +1,118 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FavoritesContext } from '../context/FavoritesContext';
-import { useLocation } from 'react-router-dom';
+import { FavoritesContext } from '../context/FavoritesContext';  // Si estàs utilitzant aquest context
+import { useNavigate } from 'react-router-dom';
 
-function Characters() 
-{
+function Characters() {
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedCharacter, setExpandedCharacter] = useState(null); // Estat per controlar el personatge expandit
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
+  const navigate = useNavigate();
 
-  const location = useLocation();
-  const selectedCharacter = location.state?.selectedCharacter || null;
+  const fetchAllCharacters = async () => {
+    let allCharacters = [];
+    let nextUrl = 'https://swapi.py4e.com/api/people/';
+    while (nextUrl) {
+      const response = await fetch(nextUrl);
+      const data = await response.json();
+      allCharacters = [...allCharacters, ...data.results];
+      nextUrl = data.next;
+    }
+    return allCharacters;
+  };
 
-  // useEffect per carregar automàticament quan es renderitza el component
-  useEffect(() => 
-  {
-    // Crida inicial per obtenir els personatges
-    fetch('https://swapi.py4e.com/api/people/')
-      .then((response) => response.json())
-      .then((data) => 
-      {
-        // Per cada personatge, buscar la informació dels films
-        const fetchFilmsPromises = data.results.map((character) => 
-        {
-          const filmsPromises = character.films.map((url) => fetch(url).then((response) => response.json()));
-          
-          return Promise.all(filmsPromises).then((films) => 
-          {
-            return { ...character, films: films.map((film) => film.title) };
-          });
-        });
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const allCharacters = await fetchAllCharacters();
 
-        // Esperar que totes les crides als films es compleixin abans de continuar
-        Promise.all(fetchFilmsPromises)
-          .then((updatedCharacters) => 
-          {
-            setCharacters(updatedCharacters); // Actualitzar l'estat amb els personatges i els films
-            setLoading(false); // Finalitzar la càrrega
+        // Obtenim les dades addicionals com el món natal i l'espècie
+        const detailedCharacters = await Promise.all(
+          allCharacters.map(async (character) => {
+            const homeworld = await fetch(character.homeworld).then((res) => res.json());
+            const species =
+              character.species.length > 0
+                ? await fetch(character.species[0]).then((res) => res.json())
+                : { name: 'Unknown' };
 
-            // Expandir automàticament el personatge seleccionat si n'hi ha
-            if (selectedCharacter) 
-            {
-              const matchingCharacter = updatedCharacters.find((char) => char.name === selectedCharacter.name);
-              if (matchingCharacter) 
-              {
-                setExpandedCharacter(matchingCharacter.name);
-              }
-            }
+            return {
+              ...character,
+              homeworld: homeworld.name,
+              species: species.name,
+            };
           })
-          .catch((error) => 
-          {
-            console.error('Error fetching films:', error);
-            setLoading(false); // Finalitzar la càrrega en cas d'error
-          });
-      })
-      .catch((error) => 
-      {
-        console.error('Error fetching Characters:', error);
-        setLoading(false); // Finalitzar la càrrega en cas d'error
-      });
-  }, [selectedCharacter]);
+        );
 
-  // Funció per alternar la visibilitat de les dades del personatge
-  const toggleExpand = (characterName) => 
-  {
-    setExpandedCharacter((prev) => (prev === characterName ? null : characterName));
+        const fetchImagesPromise = fetch('https://akabab.github.io/starwars-api/api/all.json')
+          .then((response) => response.json())
+          .then((images) => {
+            const imageMap = {};
+            images.forEach((image) => {
+              imageMap[image.name.toLowerCase()] = image.image;
+            });
+            return imageMap;
+          });
+
+        const imageMap = await fetchImagesPromise;
+
+        const charactersWithImages = detailedCharacters.map((character) => ({
+          ...character,
+          image: imageMap[character.name.toLowerCase()] || null,
+        }));
+
+        setCharacters(charactersWithImages);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Funció per navegar a la pàgina de detalls
+  const showDetails = (character) => {
+    navigate(`/characters/${character.name}`, { state: { character } });
   };
 
   return (
     <div>
       <h2>CHARACTERS</h2>
-      {loading ? (<p>Loading characters...</p>) : (
+      {loading ? (
+        <p>Loading characters...</p>
+      ) : (
         <ul>
-          {characters.map((character) => 
-          (
-            <li key={character.url}>
-              <h3 onClick={() => toggleExpand(character.name)} style={{ cursor: 'pointer'}}>
-                {character.name}
-              </h3>
-
-              {/* Mostrar la resta de la informació només si aquest personatge està expandit */}
-              {expandedCharacter === character.name && 
-              (
-                <div>
-                  <p>Height: {character.height} cm</p>
-                  <p>Mass: {character.mass} kg</p>
-                  <p>Hair color: {character.hair_color}</p>
-                  <p>Skin color: {character.skin_color}</p>
-                  <p>Eye color: {character.eye_color}</p>
-                  <p>Birth year: {character.birth_year}</p>
-                  <p>Gender: {character.gender}</p>
-                  <p>Films:</p>
-                  <ul>
-                    {
-                      character.films.length > 0 ? (
-                        character.films.map((filmTitle, index) => (<li key={index}>{filmTitle}</li>))
-                    ) : (<p>No films available</p>)
-                    }
-                  </ul>
-                </div>
+          {characters.map((character) => (
+            <li key={character.url} style={{ marginBottom: '20px' }}>
+              <h3>{character.name}</h3>
+              {character.image && (
+                <img
+                  src={character.image}
+                  alt={character.name}
+                  style={{ width: '150px', height: 'auto', marginBottom: '10px' }}
+                />
               )}
-
-              <button 
-              onClick={() => toggleFavorite(character)}
-              style={{
-                backgroundColor: favorites.some((fav) => fav.url === character.url)
-                  ? 'red'
-                  : 'gray',
-                color: 'white',
-                padding: '10px',
-                borderRadius: '5px',
-                border: 'none',
-                cursor: 'pointer',
-              }}
+              <p>Gender: {character.gender}</p>
+              <p>Homeworld: {character.homeworld}</p>
+              <p>Species: {character.species}</p>
+              <button
+                onClick={() => showDetails(character)}
+                
+              >
+                Show Details
+              </button>
+              <button
+                onClick={() => toggleFavorite(character)}
+                style={{
+                  backgroundColor: favorites.some((fav) => fav.url === character.url)
+                    ? 'red'
+                    : 'gray',
+                  color: 'white',
+                  padding: '10px',
+                  borderRadius: '5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
               >
                 {favorites.some((fav) => fav.url === character.url)
                   ? 'Remove from Favorites'
