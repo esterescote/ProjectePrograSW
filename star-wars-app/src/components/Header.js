@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import homeIcon from "../assets/home.png"; // Assegura't que la imatge estigui a la carpeta indicada
+import homeIcon from "../assets/estrella-de-la-muerte.png"; // Assegura't que la imatge estigui a la carpeta indicada
 
 function Header() {
   return (

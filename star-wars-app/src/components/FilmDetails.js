@@ -39,6 +39,7 @@ function FilmDetails() {
           backgroundColor: 'gray',
           color: 'white',
           padding: '10px',
+          margin: '10px',
           borderRadius: '5px',
           border: 'none',
           cursor: 'pointer',
@@ -55,6 +56,7 @@ function FilmDetails() {
                     : 'gray',
                   color: 'white',
                   padding: '10px',
+                  margin: '10px',
                   borderRadius: '5px',
                   border: 'none',
                   cursor: 'pointer',
@@ -80,7 +82,7 @@ function FilmDetails() {
       <p>Director: {film.director}</p>
       <p>Producer: {film.producer}</p>
       <p>Release Date: {film.release_date}</p>
-      <p>Description: {film.overview}</p>
+      <p>Opening: {film.opening_crawl}</p>
 
       <h3>Characters:</h3>
       <ul>

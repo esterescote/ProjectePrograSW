@@ -1,21 +1,16 @@
-.header 
-{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: #333;
-  padding: 20px;
-  border-radius: 10px;
+
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap');
+
+header {
+  padding: 10px 0;
 }
 
-.header-container 
-{
+.header-container {
   display: flex;
-  flex-direction: column;
-  padding: 20px;
-  align-items: center;
-  text-align: center;
-  width: 100%;
+  align-items: center; /* Alinea verticalment els elements al centre */
+  justify-content: flex-start; /* Col·loca els elements a l'esquerra */
+  gap: 20px; /* Espai entre els elements */
+  padding: 0 20px; /* Afegir espai a la dreta i l'esquerra */
 }
 
 .header-container h1 
@@ -27,8 +22,8 @@
 }
 
 /* Estils del menú */
-.search-container 
-{
+.search-container {
+  position: relative;
   margin: 20px auto;
   padding: 30px;
   background-color: #333;
@@ -37,9 +32,8 @@
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
 }
 
-.search-input 
-{
-  padding: 10px;
+.search-input {
+  padding: 10px 40px 10px 40px; /* Afegim més espai a l'esquerra per la icona */
   font-size: 1.1rem;
   border-radius: 25px;
   border: 2px solid #ddd;
@@ -50,12 +44,12 @@
   box-sizing: border-box;
 }
 
-.search-input:focus 
-{
+.search-input:focus {
   outline: none;
   border-color: none;
   background-color: #fff;
 }
+
 
 .results-grid 
 {
@@ -253,7 +247,7 @@ nav ul li a:hover
 
 body 
 {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Oswald';
   background-color: #1e1e1e;
   color: #f1f1f1;
   margin: 30px 50px;
@@ -277,6 +271,13 @@ body
   border-radius: 50%; /* Rodonim la imatge */
   transition: border-color 0.3s ease, transform 0.3s ease; /* Animació suau */
 }
+.search-icon 
+{
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  margin-right: 20px;
+}
 
 /* Canvi de color del borde en passar-hi el ratolí */
 .home-icon:hover 
@@ -284,6 +285,40 @@ body
   border-color: #ffcc00; /* Color del borde quan el ratolí passa per sobre */
   transform: scale(1.1); /* L'efecte fa que la imatge creixi lleugerament */
 }
+
+.display-elements {
+  display: flex;
+  flex-wrap: wrap; /* Permet que els elements passin a la següent línia */
+  gap: 10px; /* Espai entre els elements */
+  justify-content: center; /* Centra els elements horitzontalment */
+  align-items: center; /* Centra els elements verticalment (si és necessari) */
+  width: 100%; /* Assegura que el contenidor ocupi tot l'amplada disponible */
+}
+
+.films-container {
+  display: flex;
+  flex-wrap: wrap; /* Això permet que les pel·lícules es moguin a la següent línia quan no hi hagi espai */
+  gap: 20px; /* Espai entre les pel·lícules */
+  justify-content: center; /* Centra les pel·lícules horitzontalment */
+}
+
+.film-card {
+  background-color: #333;
+  color: white;
+  padding: 5px;
+  border-radius: 8px;
+  text-align: center;
+  /*width: 200px; /* Amplada fixa per a les targetes de pel·lícules */
+  box-sizing: border-box;
+  transition: transform 0.3s ease, background-color 0.3s ease;
+  margin-bottom: 20px;
+}
+
+.film-card:hover {
+  transform: scale(1.05);
+  background-color: #444;
+}
+
 
 h2 
 {

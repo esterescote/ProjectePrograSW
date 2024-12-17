@@ -81,7 +81,7 @@ function Characters() {
       {loading ? (
         <p>Loading characters...</p>
       ) : (
-        <ul>
+        <ul className='display-elements'>
           {characters.map((character) => (
             <li key={character.url} style={{ marginBottom: '20px' }}>
               <h3>{character.name}</h3>
@@ -89,7 +89,7 @@ function Characters() {
                 <img
                   src={character.image}
                   alt={character.name}
-                  style={{ width: '150px', height: 'auto', marginBottom: '10px' }}
+                  style={{ width: 'auto', height: '250px', marginBottom: '10px' }}
                 />
               )}
               <p>Gender: {character.gender}</p>
@@ -97,7 +97,17 @@ function Characters() {
               <p>Species: {character.species}</p>
               <button
                 onClick={() => showDetails(character)}
-                
+                style={{
+                  backgroundColor: favorites.some((fav) => fav.url === character.url)
+                    ? 'red'
+                    : 'gray',
+                  color: 'white',
+                  padding: '10px',
+                  margin: '10px',
+                  borderRadius: '5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
               >
                 Show Details
               </button>
@@ -109,6 +119,7 @@ function Characters() {
                     : 'gray',
                   color: 'white',
                   padding: '10px',
+                  margin: '10px',
                   borderRadius: '5px',
                   border: 'none',
                   cursor: 'pointer',
