@@ -86,9 +86,7 @@ function Films() {
               <button
                 onClick={() => handleShowDetails(film)}
                 style={{
-                  backgroundColor: favorites.some((fav) => fav.url === film.url)
-                    ? 'red'
-                    : 'gray',
+                  backgroundColor: 'gray',
                   color: 'white',
                   padding: '10px',
                   margin: '10px',

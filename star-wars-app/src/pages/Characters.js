@@ -70,10 +70,10 @@ function Characters() {
     fetchData();
   }, []);
 
-  // Funció per navegar a la pàgina de detalls
   const showDetails = (character) => {
-    navigate(`/characters/${character.name}`, { state: { character } });
+    navigate(`/characters/${character.name}`, { state: { characterName: character.name } });
   };
+  
 
   return (
     <div>
@@ -98,9 +98,7 @@ function Characters() {
               <button
                 onClick={() => showDetails(character)}
                 style={{
-                  backgroundColor: favorites.some((fav) => fav.url === character.url)
-                    ? 'red'
-                    : 'gray',
+                  backgroundColor: 'gray',
                   color: 'white',
                   padding: '10px',
                   margin: '10px',

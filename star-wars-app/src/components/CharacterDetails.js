@@ -1,34 +1,79 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FavoritesContext } from '../context/FavoritesContext';  // Si estàs utilitzant aquest context
-import { useLocation, useNavigate } from 'react-router-dom';
+import { FavoritesContext } from '../context/FavoritesContext';
+import { useLocation, useNavigate} from 'react-router-dom';
 
 function CharacterDetails() {
   const location = useLocation();
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
-  const character = location.state?.character;
+  const characterName = location.state?.characterName;
 
+  const [character, setCharacter] = useState(null);
   const [filmTitles, setFilmTitles] = useState([]);
+  const [imageMap, setImageMap] = useState({});
 
   useEffect(() => {
-    const fetchFilmTitles = async () => {
-      if (character && character.films.length > 0) {
-        const titles = await Promise.all(
-          character.films.map((filmUrl) =>
-            fetch(filmUrl)
-              .then((response) => response.json())
-              .then((data) => data.title)
-          )
-        );
-        setFilmTitles(titles);
+    const fetchImages = async () => {
+      try {
+        const response = await fetch('https://akabab.github.io/starwars-api/api/all.json');
+        const data = await response.json();
+        const imageMap = {};
+        data.forEach((image) => {
+          imageMap[image.name.toLowerCase()] = image.image;
+        });
+        setImageMap(imageMap);
+      } catch (error) {
+        console.error('Error fetching images:', error);
       }
     };
 
-    fetchFilmTitles();
-  }, [character]);
+    fetchImages();
+  }, []);
+
+  useEffect(() => {
+    const fetchCharacterDetails = async () => {
+      try {
+        const response = await fetch('https://swapi.py4e.com/api/people/');
+        const data = await response.json();
+        const foundCharacter = data.results.find(
+          (char) => char.name.toLowerCase() === characterName.toLowerCase()
+        );
+
+        if (foundCharacter) {
+          const homeworld = await fetch(foundCharacter.homeworld).then((res) => res.json());
+          const species =
+            foundCharacter.species.length > 0
+              ? await fetch(foundCharacter.species[0]).then((res) => res.json())
+              : { name: 'Unknown' };
+
+          const detailedCharacter = {
+            ...foundCharacter,
+            homeworld: homeworld.name,
+            species: species.name,
+            image: imageMap[foundCharacter.name.toLowerCase()] || null, // Agafem la imatge del map
+          };
+
+          setCharacter(detailedCharacter);
+
+          const titles = await Promise.all(
+            detailedCharacter.films.map((filmUrl) =>
+              fetch(filmUrl).then((response) => response.json()).then((data) => data.title)
+            )
+          );
+          setFilmTitles(titles);
+        }
+      } catch (error) {
+        console.error('Error fetching character details:', error);
+      }
+    };
+
+    if (characterName && imageMap[characterName.toLowerCase()]) {
+      fetchCharacterDetails();
+    }
+  }, [characterName, imageMap]);
 
   if (!character) {
-    return <p>No character details available.</p>;
+    return <p>Loading character details...</p>;
   }
 
   return (
@@ -48,24 +93,24 @@ function CharacterDetails() {
       >
         Back
       </button>
+
       <button
-                onClick={() => toggleFavorite(character)}
-                style={{
-                  backgroundColor: favorites.some((fav) => fav.url === character.url)
-                    ? 'red'
-                    : 'gray',
-                  color: 'white',
-                  padding: '10px',
-                  margin: '10px',
-                  borderRadius: '5px',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                {favorites.some((fav) => fav.url === character.url)
-                  ? 'Remove from Favorites'
-                  : 'Add to Favorites'}
-              </button>
+        onClick={() => toggleFavorite(character)}
+        style={{
+          backgroundColor: favorites.some((fav) => fav.url === character.url) ? 'red' : 'gray',
+          color: 'white',
+          padding: '10px',
+          margin: '10px',
+          borderRadius: '5px',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+      >
+        {favorites.some((fav) => fav.url === character.url)
+          ? 'Remove from Favorites'
+          : 'Add to Favorites'}
+      </button>
+
       <h2>{character.name}</h2>
       {character.image && (
         <img
@@ -85,11 +130,18 @@ function CharacterDetails() {
       <p>Species: {character.species}</p>
       <p>Films:</p>
       <ul>
-        {filmTitles.length > 0 ? (
-          filmTitles.map((title, index) => <li key={index}>{title}</li>)
-        ) : (
-          <p>No films available</p>
-        )}
+        {filmTitles.map((title, index) => (
+          <li
+          key={index}
+          onClick={() =>
+            navigate(`/films/${title}`, { state: { filmTitles: title } })
+          }
+          style={{ cursor: 'pointer' }}
+        >
+          {title}
+          
+        </li>
+        ))}
       </ul>
     </div>
   );
