@@ -203,7 +203,7 @@ function FilmDetails() {
                 fetch(starship)
                   .then((response) => response.json())
                   .then((data) => {
-                    navigate(`/starships/${data.name}`, { state: { starship: data } }); // Passar tot l'objecte de la starship
+                    navigate(`/starships/${data.name}`, { state: { starship: data } });
                   });
               }}
               style={{ cursor: 'pointer' }}

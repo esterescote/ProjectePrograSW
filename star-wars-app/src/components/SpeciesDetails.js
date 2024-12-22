@@ -85,17 +85,6 @@ function SpeciesDetails()
       >
         Back
       </button>
-      <h2>{specie.name}</h2>
-      <p><strong>Classification:</strong> {specie.classification}</p>
-      <p><strong>Designation:</strong> {specie.designation}</p>
-      <p><strong>Average height:</strong> {specie.average_height} cm</p>
-      <p><strong>Skin colors:</strong> {specie.skin_colors}</p>
-      <p><strong>Hair colors:</strong> {specie.hair_colors}</p>
-      <p><strong>Eye colors:</strong> {specie.eye_colors}</p>
-      <p><strong>Average lifespan:</strong> {specie.average_lifespan} years</p>
-      <p><strong>Language:</strong> {specie.language}</p>
-      <p><strong>Homeworld:</strong> {homeworldName || 'Unknown'}</p>
-
       {/* Botó per afegir/eliminar de favorits */}
       <button
         onClick={handleFavoriteClick}
@@ -111,6 +100,17 @@ function SpeciesDetails()
       >
         {favorites.some((fav) => fav.url === specie.url) ? 'Remove from Favorites' : 'Add to Favorites'}
       </button>
+      
+      <h2>{specie.name}</h2>
+      <p><strong>Classification:</strong> {specie.classification}</p>
+      <p><strong>Designation:</strong> {specie.designation}</p>
+      <p><strong>Average height:</strong> {specie.average_height} cm</p>
+      <p><strong>Skin colors:</strong> {specie.skin_colors}</p>
+      <p><strong>Hair colors:</strong> {specie.hair_colors}</p>
+      <p><strong>Eye colors:</strong> {specie.eye_colors}</p>
+      <p><strong>Average lifespan:</strong> {specie.average_lifespan} years</p>
+      <p><strong>Language:</strong> {specie.language}</p>
+      <p><strong>Homeworld:</strong> {homeworldName || 'Unknown'}</p>
 
       {/* Mostra les persones associades */}
       <div>

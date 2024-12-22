@@ -2,14 +2,14 @@ import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-function CharacterDetails() 
-{
+function CharacterDetails() {
   const location = useLocation();
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const characterName = location.state?.characterName;
 
   const [character, setCharacter] = useState(null);
+  const [starshipNames, setStarshipNames] = useState([]);
   const [filmTitles, setFilmTitles] = useState([]);
   const [imageMap, setImageMap] = useState({});
 
@@ -27,7 +27,6 @@ function CharacterDetails()
         console.error('Error fetching images:', error);
       }
     };
-
     fetchImages();
   }, []);
 
@@ -47,7 +46,6 @@ function CharacterDetails()
               ? await fetch(foundCharacter.species[0]).then((res) => res.json())
               : { name: 'Unknown' };
 
-          // Detalls de les starships
           const starshipNames = await Promise.all(
             foundCharacter.starships.map((starshipUrl) =>
               fetch(starshipUrl).then((res) => res.json()).then((data) => data.name)
@@ -57,8 +55,8 @@ function CharacterDetails()
           const detailedCharacter = {
             ...foundCharacter,
             homeworld: homeworld.name,
-            species: species.name,  // Només mostrem el nom de l'espècie
-            starships: starshipNames,  // Afegim els noms de les starships
+            species: species.name, // Només mostrem el nom de l'espècie
+            starships: starshipNames, // Afegim els noms de les starships
             image: imageMap[foundCharacter.name.toLowerCase()] || null, // Agafem la imatge del map
           };
 
@@ -76,10 +74,16 @@ function CharacterDetails()
       }
     };
 
-    if (characterName && imageMap[characterName.toLowerCase()]) {
+    if (characterName) {
       fetchCharacterDetails();
     }
   }, [characterName, imageMap]);
+
+  useEffect(() => {
+    if (character && character.starships && character.starships.length > 0) {
+      setStarshipNames(character.starships);
+    }
+  }, [character]);
 
   if (!character) {
     return <p>Loading character details...</p>;
@@ -141,16 +145,35 @@ function CharacterDetails()
       <p>Species: {character.species}</p>
 
       {/* Detalls de les starships */}
-      {character.starships && character.starships.length > 0 && (
-        <div>
-          <h3>Starships:</h3>
-          <ul>
-            {character.starships.map((starship, index) => (
-              <li key={index}>{starship}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <div>
+        <h3>Starships:</h3>
+        <ul className="display-elements">
+  {starshipNames.length > 0 ? (
+    starshipNames.map((name, index) => (
+      <li
+        key={index}
+        onClick={() => {
+          // Obtener la URL de la starship del personaje
+          const starshipUrl = character.starships[index];
+          
+          // Obtener detalles de la starship usando la URL
+          fetch(starshipUrl)
+            .then((response) => response.json())
+            .then((data) => {
+              // Navegar a la página de la starship pasando los datos completos como estado
+              navigate(`/starships/${data.name}`, { state: { starship: data } });
+            });
+        }}
+        style={{ cursor: 'pointer' }}
+      >
+        {name}
+      </li>
+    ))
+  ) : (
+    <p>No starships available</p>
+  )}
+</ul>
+      </div>
 
       <p>Films:</p>
       <ul>
