@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom'; // Importar useNavigate per navegar
 import { FavoritesContext } from '../context/FavoritesContext'; // Importa el context per als favorits
 
-function SpeciesDetails() {
+function SpeciesDetails() 
+{
   const { name } = useParams();  // Obtenim el nom de l'espècie des de la URL
   const [specie, setSpecie] = useState(null);
   const [homeworldName, setHomeworldName] = useState('');  // Per emmagatzemar el nom del planeta
@@ -11,9 +12,12 @@ function SpeciesDetails() {
   const { favorites, toggleFavorite } = React.useContext(FavoritesContext); // Usar el context de favorits
   const navigate = useNavigate();  // Usar el hook per navegar entre pàgines
 
-  useEffect(() => {
-    const fetchSpecieDetails = async () => {
-      try {
+  useEffect(() => 
+  {
+    const fetchSpecieDetails = async () => 
+    {
+      try 
+      {
         // Obtenim les dades de l'espècie per nom
         const response = await fetch(`https://swapi.py4e.com/api/species/?search=${name}`);
         const data = await response.json();
@@ -23,25 +27,29 @@ function SpeciesDetails() {
         setSpecie(specieData);
 
         // Si hi ha un homeworld, fem una crida per obtenir el nom del planeta
-        if (specieData && specieData.homeworld) {
+        if (specieData && specieData.homeworld) 
+        {
           const planetResponse = await fetch(specieData.homeworld);
           const planetData = await planetResponse.json();
           setHomeworldName(planetData.name); // Guardem el nom del planeta
         }
 
         // Obtenim la informació de les persones associades a l'espècie
-        if (specieData.people) {
+        if (specieData.people) 
+        {
           const peopleData = await Promise.all(specieData.people.map(personUrl => fetch(personUrl).then(res => res.json())));
           setPeople(peopleData);
         }
 
         // Obtenim la informació de les pel·lícules associades a l'espècie
-        if (specieData.films) {
+        if (specieData.films) 
+        {
           const filmsData = await Promise.all(specieData.films.map(filmUrl => fetch(filmUrl).then(res => res.json())));
           setFilms(filmsData);
         }
 
-      } catch (error) {
+      } catch (error) 
+      {
         console.error('Error fetching species details:', error);
       }
     };

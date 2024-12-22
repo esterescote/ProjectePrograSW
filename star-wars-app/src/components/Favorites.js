@@ -2,40 +2,24 @@ import React, { useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
 import { useNavigate } from 'react-router-dom';
 
-function Favorites() 
-{
-  const { favorites, toggleFavorite, clearFavorites  } = useContext(FavoritesContext);
+function Favorites() {
+  const { favorites, toggleFavorite, clearFavorites } = useContext(FavoritesContext);
   const navigate = useNavigate();
 
-  const handleNavigate = (item) => 
-  {
-    // Verifiquem el tipus de l'element i redirigim a la ruta corresponent
-    if (item.title) 
-    {
-      navigate('/films', { state: { selectedFilm: item } });
-    } 
-    else if (item.name && item.population)  
-    {
-      navigate('/planets', { state: { selectedPlanet: item } });
-    } 
-    else if (item.name && item.designation) 
-    {
-      navigate('/species', { state: { selectedSpecie: item } });
-    } 
-    else if (item.name && item.model) 
-    {
-      navigate('/starships', { state: { selectedStarship: item } });
+  const handleNavigate = (item) => {
+    if (item.title) {
+      navigate(`/films/${item.id}`, { state: { film: item } });
+    } else if (item.name && item.population) {
+      navigate(`/planets/${item.name}`, { state: { planetName: item.name } });
+    } else if (item.name && item.designation) {
+      navigate(`/species/${item.name}`, { state: { selectedSpecie: item } });
+    } else if (item.name && item.model) {
+      navigate(`/starships/${item.name}`, { state: { starship: item } });
+    } else if (item.name) {
+      navigate(`/characters/${item.name}`, { state: { characterName: item.name } });
+    } else {
+      console.error('Unknown item type:', item);
     }
-    else if (item.name) 
-    {
-      navigate('/characters', { state: { selectedCharacter: item } });
-    } 
-
-    else 
-    {
-      console.error('Unknown item type:', item); // Per identificar errors en l'element
-    }
-    
   };
 
   return (
@@ -45,9 +29,9 @@ function Favorites()
         <ul>
           {favorites.map((item) => (
             <li key={item.url}>
-              <h3 
-                onClick={() => handleNavigate(item)} // Redirigir
-                style={{ cursor: 'pointer'}}
+              <h3
+                onClick={() => handleNavigate(item)} // Redirigeix a la ruta de detalls
+                style={{ cursor: 'pointer' }}
               >
                 {item.title || item.name}
               </h3>

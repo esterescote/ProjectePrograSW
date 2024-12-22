@@ -169,26 +169,7 @@ function FilmDetails() {
           <p>No characters available</p>
         )}
       </ul>
-        {/* Mostrar species */}
-      <h3>Species:</h3>
-      <ul className="display-elements">
-        {speciesNames.length > 0 ? (
-          speciesNames.map((name, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/species/${name}`, { state: { speciesName: name } })
-              }
-              style={{ cursor: 'pointer' }}
-            >
-              {name}
-            </li>
-          ))
-        ) : (
-          <p>No species available</p>
-        )}
-      </ul>
-      
+
       {/* Mostrar planetes */}
       <h3>Planets:</h3>
       <ul className="display-elements">
@@ -216,9 +197,15 @@ function FilmDetails() {
           starshipNames.map((name, index) => (
             <li
               key={index}
-              onClick={() =>
-                navigate(`/starships/${name}`, { state: { starshipName: name } })
-              }
+              onClick={() => {
+                // Trobar l'objecte complet de la nau per URL
+                const starship = film.starships[index]; // Usar l'índex per obtenir el URL de la starship
+                fetch(starship)
+                  .then((response) => response.json())
+                  .then((data) => {
+                    navigate(`/starships/${data.name}`, { state: { starship: data } }); // Passar tot l'objecte de la starship
+                  });
+              }}
               style={{ cursor: 'pointer' }}
             >
               {name}
@@ -226,6 +213,26 @@ function FilmDetails() {
           ))
         ) : (
           <p>No starships available</p>
+        )}
+      </ul>
+
+      {/* Mostrar species */}
+      <h3>Species:</h3>
+      <ul className="display-elements">
+        {speciesNames.length > 0 ? (
+          speciesNames.map((name, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                navigate(`/species/${name}`, { state: { speciesName: name } })
+              }
+              style={{ cursor: 'pointer' }}
+            >
+              {name}
+            </li>
+          ))
+        ) : (
+          <p>No species available</p>
         )}
       </ul>
     </div>
