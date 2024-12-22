@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
-import { useLocation, useNavigate} from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-function CharacterDetails() {
+function CharacterDetails() 
+{
   const location = useLocation();
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
@@ -46,10 +47,18 @@ function CharacterDetails() {
               ? await fetch(foundCharacter.species[0]).then((res) => res.json())
               : { name: 'Unknown' };
 
+          // Detalls de les starships
+          const starshipNames = await Promise.all(
+            foundCharacter.starships.map((starshipUrl) =>
+              fetch(starshipUrl).then((res) => res.json()).then((data) => data.name)
+            )
+          );
+
           const detailedCharacter = {
             ...foundCharacter,
             homeworld: homeworld.name,
-            species: species.name,
+            species: species.name,  // Només mostrem el nom de l'espècie
+            starships: starshipNames,  // Afegim els noms de les starships
             image: imageMap[foundCharacter.name.toLowerCase()] || null, // Agafem la imatge del map
           };
 
@@ -127,20 +136,34 @@ function CharacterDetails() {
       <p>Birth year: {character.birth_year}</p>
       <p>Gender: {character.gender}</p>
       <p>Homeworld: {character.homeworld}</p>
+
+      {/* Nom de l'espècie */}
       <p>Species: {character.species}</p>
+
+      {/* Detalls de les starships */}
+      {character.starships && character.starships.length > 0 && (
+        <div>
+          <h3>Starships:</h3>
+          <ul>
+            {character.starships.map((starship, index) => (
+              <li key={index}>{starship}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <p>Films:</p>
       <ul>
         {filmTitles.map((title, index) => (
           <li
-          key={index}
-          onClick={() =>
-            navigate(`/films/${title}`, { state: { filmTitles: title } })
-          }
-          style={{ cursor: 'pointer' }}
-        >
-          {title}
-          
-        </li>
+            key={index}
+            onClick={() =>
+              navigate(`/films/${title}`, { state: { filmTitles: title } })
+            }
+            style={{ cursor: 'pointer' }}
+          >
+            {title}
+          </li>
         ))}
       </ul>
     </div>

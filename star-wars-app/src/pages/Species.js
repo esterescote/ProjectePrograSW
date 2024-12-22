@@ -1,15 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
-import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 function Species() {
-  const [species, setSpecies] = useState([]); 
+  const [species, setSpecies] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [expandedSpecies, setExpandedSpecies] = useState(null);
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
-
-  const location = useLocation();
-  const selectedSpecie = location.state?.selectedSpecie || null;
+  const navigate = useNavigate();
 
   // Funció per obtenir totes les espècies
   const fetchAllSpecies = async () => {
@@ -56,13 +53,9 @@ function Species() {
     fetchAllSpecies(); // Carregar totes les espècies quan es renderitza el component
   }, []);
 
-  // Funció per alternar la visibilitat de les dades de l'espècie
-  const toggleExpand = (speciesName) => {
-    if (expandedSpecies === speciesName) {
-      setExpandedSpecies(null); // Si ja està expandit, el tanquem
-    } else {
-      setExpandedSpecies(speciesName); // Si no està expandit, l'obrim
-    }
+  // Funció per mostrar els detalls de l'espècie
+  const showDetails = (specie) => {
+    navigate(`/species/${specie.name}`, { state: { specieName: specie.name } })
   };
 
   return (
@@ -74,22 +67,26 @@ function Species() {
             species.map((specie) => 
             (
               <li key={specie.url}>
-                <h3 onClick={() => toggleExpand(specie.name)} style={{ cursor: 'pointer'}}>
-                  {specie.name}
-                </h3>
-                {expandedSpecies === specie.name && (
-                  <div>
-                    <p>Classification: {specie.classification}</p>
-                    <p>Designation: {specie.designation}</p>
-                    <p>Average height: {specie.average_height} cm</p>
-                    <p>Skin colors: {specie.skin_colors}</p>
-                    <p>Hair colors: {specie.hair_colors}</p>
-                    <p>Eye colors: {specie.eye_colors}</p>
-                    <p>Average lifespan: {specie.average_lifespan} years</p>
-                    <p>Language: {specie.language}</p>
-                    <p>Homeworld: {specie.homeworld}</p>
-                  </div>
-                )}
+                <h3>{specie.name}</h3>
+
+                {/* Mostrar dos detalls per espècie */}
+                <p><strong>Classification:</strong> {specie.classification}</p>
+                <p><strong>Designation:</strong> {specie.designation}</p>
+
+                <button
+                  onClick={() => showDetails(specie)}
+                  style={{
+                    backgroundColor: 'gray',
+                    color: 'white',
+                    padding: '10px',
+                    margin: '10px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Show Details
+                </button>
                 <button
                   onClick={() => toggleFavorite(specie)}
                   style={{

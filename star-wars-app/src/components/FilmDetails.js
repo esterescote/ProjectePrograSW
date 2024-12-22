@@ -9,6 +9,9 @@ function FilmDetails() {
   const film = location.state?.film; // Asegura't que film està disponible
 
   const [characterNames, setCharacterNames] = useState([]);  // Per desar els noms dels personatges
+  const [planetNames, setPlanetNames] = useState([]);  // Per desar els noms dels planetes
+  const [starshipNames, setStarshipNames] = useState([]);  // Per desar els noms de les starships
+  const [speciesNames, setSpeciesNames] = useState([]);  // Per desar els noms de les species
   const [imageMap, setImageMap] = useState({});
 
   useEffect(() => {
@@ -22,6 +25,45 @@ function FilmDetails() {
           )
         );
         setCharacterNames(names);
+      }
+    };
+
+    const fetchPlanetNames = async () => {
+      if (film && film.planets && film.planets.length > 0) {
+        const names = await Promise.all(
+          film.planets.map((planetUrl) =>
+            fetch(planetUrl)
+              .then((response) => response.json())
+              .then((data) => data.name)
+          )
+        );
+        setPlanetNames(names);
+      }
+    };
+
+    const fetchStarshipNames = async () => {
+      if (film && film.starships && film.starships.length > 0) {
+        const names = await Promise.all(
+          film.starships.map((starshipUrl) =>
+            fetch(starshipUrl)
+              .then((response) => response.json())
+              .then((data) => data.name)
+          )
+        );
+        setStarshipNames(names);
+      }
+    };
+
+    const fetchSpeciesNames = async () => {
+      if (film && film.species && film.species.length > 0) {
+        const names = await Promise.all(
+          film.species.map((speciesUrl) =>
+            fetch(speciesUrl)
+              .then((response) => response.json())
+              .then((data) => data.name)
+          )
+        );
+        setSpeciesNames(names);
       }
     };
 
@@ -40,6 +82,9 @@ function FilmDetails() {
     };
 
     fetchCharacterNames();
+    fetchPlanetNames();
+    fetchStarshipNames();
+    fetchSpeciesNames();
     fetchImages();
   }, [film]);
 
@@ -122,6 +167,65 @@ function FilmDetails() {
           ))
         ) : (
           <p>No characters available</p>
+        )}
+      </ul>
+        {/* Mostrar species */}
+      <h3>Species:</h3>
+      <ul className="display-elements">
+        {speciesNames.length > 0 ? (
+          speciesNames.map((name, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                navigate(`/species/${name}`, { state: { speciesName: name } })
+              }
+              style={{ cursor: 'pointer' }}
+            >
+              {name}
+            </li>
+          ))
+        ) : (
+          <p>No species available</p>
+        )}
+      </ul>
+      
+      {/* Mostrar planetes */}
+      <h3>Planets:</h3>
+      <ul className="display-elements">
+        {planetNames.length > 0 ? (
+          planetNames.map((name, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                navigate(`/planets/${name}`, { state: { planetName: name } })
+              }
+              style={{ cursor: 'pointer' }}
+            >
+              {name}
+            </li>
+          ))
+        ) : (
+          <p>No planets available</p>
+        )}
+      </ul>
+
+      {/* Mostrar starships */}
+      <h3>Starships:</h3>
+      <ul className="display-elements">
+        {starshipNames.length > 0 ? (
+          starshipNames.map((name, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                navigate(`/starships/${name}`, { state: { starshipName: name } })
+              }
+              style={{ cursor: 'pointer' }}
+            >
+              {name}
+            </li>
+          ))
+        ) : (
+          <p>No starships available</p>
         )}
       </ul>
     </div>
