@@ -2,33 +2,41 @@ import React, { useState, useEffect, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FavoritesContext } from '../context/FavoritesContext';
 
-function PlanetsDetails() 
-{
+function PlanetsDetails() {
   const location = useLocation();
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
   const planetName = location.state?.planetName;
   const [planet, setPlanet] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPlanetDetails = async () => {
       try {
-        const response = await fetch('https://swapi.py4e.com/api/planets/');
-        const data = await response.json();
-        const foundPlanet = data.results.find(
-          (planet) => planet.name.toLowerCase() === planetName.toLowerCase()
-        );
+        let nextUrl = 'https://swapi.py4e.com/api/planets/';
+        let foundPlanet = null;
+
+        // Iterar per les pàgines fins que trobem el planeta
+        while (nextUrl && !foundPlanet) {
+          const response = await fetch(nextUrl);
+          const data = await response.json();
+          foundPlanet = data.results.find(
+            (planet) => planet.name.toLowerCase() === planetName.toLowerCase()
+          );
+          nextUrl = data.next; // Obtenir la següent pàgina si existeix
+        }
 
         if (foundPlanet) {
+          // Carregar residents i films
           const residents = await Promise.all(
             foundPlanet.residents.map((url) =>
-              fetch(url).then((res) => res.json()).then((data) => data.name)
+              fetch(url).then((res) => res.json())
             )
           );
           const films = await Promise.all(
             foundPlanet.films.map((url) =>
-              fetch(url).then((res) => res.json()).then((data) => data.title)
+              fetch(url).then((res) => res.json())
             )
           );
 
@@ -40,6 +48,8 @@ function PlanetsDetails()
         }
       } catch (error) {
         console.error('Error fetching planet details:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -48,8 +58,12 @@ function PlanetsDetails()
     }
   }, [planetName]);
 
-  if (!planet) {
+  if (loading) {
     return <p>Loading planet details...</p>;
+  }
+
+  if (!planet) {
+    return <p>Planet not found</p>;
   }
 
   return (
@@ -73,7 +87,9 @@ function PlanetsDetails()
       <button
         onClick={() => toggleFavorite(planet)}
         style={{
-          backgroundColor: favorites.some((fav) => fav.url === planet.url) ? 'red' : 'gray',
+          backgroundColor: favorites.some((fav) => fav.url === planet.url)
+            ? 'red'
+            : 'gray',
           color: 'white',
           padding: '10px',
           margin: '10px',
@@ -100,7 +116,21 @@ function PlanetsDetails()
       <h3>Residents:</h3>
       <ul>
         {planet.residents.length > 0 ? (
-          planet.residents.map((resident, index) => <li key={index}>{resident}</li>)
+          planet.residents.map((resident, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                navigate(`/characters/${resident.name}`, {
+                  state: { characterName: resident.name },
+                })
+              }
+              style={{
+                cursor: 'pointer',
+              }}
+            >
+              {resident.name}
+            </li>
+          ))
         ) : (
           <p>No residents available</p>
         )}
@@ -109,7 +139,21 @@ function PlanetsDetails()
       <h3>Films:</h3>
       <ul>
         {planet.films.length > 0 ? (
-          planet.films.map((film, index) => <li key={index}>{film}</li>)
+          planet.films.map((film, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                navigate(`/films/${film.title}`, {
+                  state: { film },
+                })
+              }
+              style={{
+                cursor: 'pointer',
+              }}
+            >
+              {film.title}
+            </li>
+          ))
         ) : (
           <p>No films available</p>
         )}

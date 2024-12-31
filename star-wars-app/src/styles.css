@@ -312,6 +312,7 @@ body
   box-sizing: border-box;
   transition: transform 0.3s ease, background-color 0.3s ease;
   margin-bottom: 20px;
+  cursor: pointer;
 }
 
 .film-card:hover {

@@ -8,85 +8,92 @@ function CharacterDetails() {
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const characterName = location.state?.characterName;
 
-  const [character, setCharacter] = useState(null);
-  const [starshipNames, setStarshipNames] = useState([]);
-  const [filmTitles, setFilmTitles] = useState([]);
-  const [imageMap, setImageMap] = useState({});
 
-  useEffect(() => {
-    const fetchImages = async () => {
-      try {
-        const response = await fetch('https://akabab.github.io/starwars-api/api/all.json');
-        const data = await response.json();
-        const imageMap = {};
-        data.forEach((image) => {
-          imageMap[image.name.toLowerCase()] = image.image;
-        });
-        setImageMap(imageMap);
-      } catch (error) {
-        console.error('Error fetching images:', error);
-      }
-    };
-    fetchImages();
-  }, []);
+  const [character, setCharacter] = useState(null);
+  const [filmTitles, setFilmTitles] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Funció per carregar tots els personatges de totes les pàgines
+  const fetchAllCharacters = async () => {
+    let allCharacters = [];
+    let nextUrl = 'https://swapi.py4e.com/api/people/';
+    while (nextUrl) {
+      const response = await fetch(nextUrl);
+      const data = await response.json();
+      allCharacters = [...allCharacters, ...data.results];
+      nextUrl = data.next;
+    }
+    return allCharacters;
+  };
 
   useEffect(() => {
     const fetchCharacterDetails = async () => {
       try {
-        const response = await fetch('https://swapi.py4e.com/api/people/');
-        const data = await response.json();
-        const foundCharacter = data.results.find(
+        // Carregar tots els personatges
+        const allCharacters = await fetchAllCharacters();
+
+        // Trobar el personatge corresponent
+        const foundCharacter = allCharacters.find(
           (char) => char.name.toLowerCase() === characterName.toLowerCase()
         );
 
-        if (foundCharacter) {
-          const homeworld = await fetch(foundCharacter.homeworld).then((res) => res.json());
-          const species =
-            foundCharacter.species.length > 0
-              ? await fetch(foundCharacter.species[0]).then((res) => res.json())
-              : { name: 'Unknown' };
-
-          const starshipNames = await Promise.all(
-            foundCharacter.starships.map((starshipUrl) =>
-              fetch(starshipUrl).then((res) => res.json()).then((data) => data.name)
-            )
-          );
-
-          const detailedCharacter = {
-            ...foundCharacter,
-            homeworld: homeworld.name,
-            species: species.name, // Només mostrem el nom de l'espècie
-            starships: starshipNames, // Afegim els noms de les starships
-            image: imageMap[foundCharacter.name.toLowerCase()] || null, // Agafem la imatge del map
-          };
-
-          setCharacter(detailedCharacter);
-
-          const titles = await Promise.all(
-            detailedCharacter.films.map((filmUrl) =>
-              fetch(filmUrl).then((response) => response.json()).then((data) => data.title)
-            )
-          );
-          setFilmTitles(titles);
+        if (!foundCharacter) {
+          console.error('Character not found');
+          setLoading(false);
+          return;
         }
+
+        // Carregar dades addicionals: món natal i espècie
+        const homeworld = await fetch(foundCharacter.homeworld).then((res) => res.json());
+        const species =
+          foundCharacter.species.length > 0
+            ? await fetch(foundCharacter.species[0]).then((res) => res.json())
+            : { name: 'Unknown' };
+
+        // Carregar imatge del personatge
+        const imageResponse = await fetch('https://akabab.github.io/starwars-api/api/all.json');
+        const imageData = await imageResponse.json();
+        const characterImage =
+          imageData.find((img) => img.name.toLowerCase() === foundCharacter.name.toLowerCase())
+            ?.image || null;
+
+        // Construir els detalls complets del personatge
+        const detailedCharacter = {
+          ...foundCharacter,
+          homeworld: homeworld.name,
+          species: species.name,
+          image: characterImage,
+        };
+
+        setCharacter(detailedCharacter);
+
+        // Carregar títols de les pel·lícules
+        const titles = await Promise.all(
+          foundCharacter.films.map((filmUrl) =>
+            fetch(filmUrl)
+              .then((response) => response.json())
+              .then((film) => ({ title: film.title, details: film }))
+          )
+        );
+        setFilmTitles(titles);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching character details:', error);
+        setLoading(false);
       }
     };
 
     if (characterName) {
       fetchCharacterDetails();
     }
-  }, [characterName, imageMap]);
+  }, [characterName]);
 
-  useEffect(() => {
-    if (character && character.starships && character.starships.length > 0) {
-      setStarshipNames(character.starships);
-    }
-  }, [character]);
+  if (loading) {
+    return <p>Loading character details...</p>;
+  }
 
   if (!character) {
-    return <p>Loading character details...</p>;
+    return <p>Character not found.</p>;
   }
 
   return (
@@ -140,52 +147,19 @@ function CharacterDetails() {
       <p>Birth year: {character.birth_year}</p>
       <p>Gender: {character.gender}</p>
       <p>Homeworld: {character.homeworld}</p>
-
-      {/* Nom de l'espècie */}
       <p>Species: {character.species}</p>
 
-      {/* Detalls de les starships */}
-      <div>
-        <h3>Starships:</h3>
-        <ul className="display-elements">
-  {starshipNames.length > 0 ? (
-    starshipNames.map((name, index) => (
-      <li
-        key={index}
-        onClick={() => {
-          // Obtener la URL de la starship del personaje
-          const starshipUrl = character.starships[index];
-          
-          // Obtener detalles de la starship usando la URL
-          fetch(starshipUrl)
-            .then((response) => response.json())
-            .then((data) => {
-              // Navegar a la página de la starship pasando los datos completos como estado
-              navigate(`/starships/${data.name}`, { state: { starship: data } });
-            });
-        }}
-        style={{ cursor: 'pointer' }}
-      >
-        {name}
-      </li>
-    ))
-  ) : (
-    <p>No starships available</p>
-  )}
-</ul>
-      </div>
-
-      <p>Films:</p>
+      <h3>Films:</h3>
       <ul>
-        {filmTitles.map((title, index) => (
+        {filmTitles.map((film, index) => (
           <li
             key={index}
             onClick={() =>
-              navigate(`/films/${title}`, { state: { filmTitles: title } })
+              navigate(`/films/${film.title}`, { state: { film: film.details } })
             }
             style={{ cursor: 'pointer' }}
           >
-            {title}
+            {film.title}
           </li>
         ))}
       </ul>

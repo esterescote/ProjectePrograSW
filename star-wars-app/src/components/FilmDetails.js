@@ -12,7 +12,6 @@ function FilmDetails() {
   const [planetNames, setPlanetNames] = useState([]);  // Per desar els noms dels planetes
   const [starshipNames, setStarshipNames] = useState([]);  // Per desar els noms de les starships
   const [speciesNames, setSpeciesNames] = useState([]);  // Per desar els noms de les species
-  const [imageMap, setImageMap] = useState({});
 
   useEffect(() => {
     const fetchCharacterNames = async () => {
@@ -67,25 +66,10 @@ function FilmDetails() {
       }
     };
 
-    const fetchImages = async () => {
-      try {
-        const response = await fetch('https://akabab.github.io/starwars-api/api/all.json');
-        const data = await response.json();
-        const imageMap = {};
-        data.forEach((image) => {
-          imageMap[image.name.toLowerCase()] = image.image;
-        });
-        setImageMap(imageMap);
-      } catch (error) {
-        console.error('Error fetching images:', error);
-      }
-    };
-
     fetchCharacterNames();
     fetchPlanetNames();
     fetchStarshipNames();
     fetchSpeciesNames();
-    fetchImages();
   }, [film]);
 
   if (!film) {
@@ -155,14 +139,6 @@ function FilmDetails() {
               style={{ cursor: 'pointer' }}
             >
               {name}
-              {/* Si tens imatges, es poden mostrar aquí */}
-              {imageMap[name.toLowerCase()] && (
-                <img
-                  src={imageMap[name.toLowerCase()]}
-                  alt={name}
-                  style={{ width: '30px', height: 'auto', marginLeft: '10px' }}
-                />
-              )}
             </li>
           ))
         ) : (

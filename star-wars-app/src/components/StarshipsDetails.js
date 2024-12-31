@@ -1,51 +1,60 @@
-import React, { useState, useEffect, useContext, useMemo } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { FavoritesContext } from '../context/FavoritesContext'; // Importar el context de favorites
+import React, { useState, useEffect, useContext } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { FavoritesContext } from '../context/FavoritesContext';
 
 function StarshipsDetails() {
-  const location = useLocation(); // Obtenir l'estat de la ubicació
-  const navigate = useNavigate(); // Hook per navegar entre pàgines
-  const { favorites, toggleFavorite } = useContext(FavoritesContext); // Obtenir toggleFavorite del context
-  
-  const starship = useMemo(() => location.state?.starship || {}, [location.state?.starship]); // Memoritzar el valor de starship
+  const { name } = useParams(); // Obtenir el nom de la nau des de la URL
+  const navigate = useNavigate();
+  const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
-  const [pilotNames, setPilotNames] = useState([]);  // Per desar els noms dels pilots
-  const [filmTitles, setFilmTitles] = useState([]);  // Per desar els títols de les pel·lícules
+  const [starship, setStarship] = useState(null); // Per emmagatzemar les dades de la nau
+  const [pilots, setPilots] = useState([]); // Per desar els objectes complets dels pilots
+  const [films, setFilms] = useState([]); // Per desar els objectes complets de les pel·lícules
 
   // Comprovar si la nau està en favorites
-  const isFavorite = favorites.some((fav) => fav.url === starship.url);
+  const isFavorite = favorites.some((fav) => fav.url === starship?.url);
 
-  // Carregar els pilots i films de la nau
   useEffect(() => {
-    const fetchPilots = async () => {
-      if (starship.pilots && starship.pilots.length > 0) {
-        const pilots = await Promise.all(
-          starship.pilots.map((pilotUrl) =>
-            fetch(pilotUrl)
-              .then((response) => response.json())
-              .then((data) => data.name)
-          )
-        );
-        setPilotNames(pilots);
+    const fetchStarshipDetails = async () => {
+      try {
+        const response = await fetch(`https://swapi.py4e.com/api/starships/?search=${name}`);
+        const data = await response.json();
+        const starshipData = data.results[0]; // Assumim que el resultat és únic
+
+        setStarship(starshipData);
+
+        if (starshipData) {
+          // Carregar pilots
+          if (starshipData.pilots && starshipData.pilots.length > 0) {
+            const pilotData = await Promise.all(
+              starshipData.pilots.map((pilotUrl) =>
+                fetch(pilotUrl).then((response) => response.json())
+              )
+            );
+            setPilots(pilotData); // Guardar objectes complets dels pilots
+          }
+
+          // Carregar pel·lícules
+          if (starshipData.films && starshipData.films.length > 0) {
+            const filmData = await Promise.all(
+              starshipData.films.map((filmUrl) =>
+                fetch(filmUrl).then((response) => response.json())
+              )
+            );
+            setFilms(filmData); // Guardar objectes complets de les pel·lícules
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching starship details:', error);
       }
     };
 
-    const fetchFilms = async () => {
-      if (starship.films && starship.films.length > 0) {
-        const films = await Promise.all(
-          starship.films.map((filmUrl) =>
-            fetch(filmUrl)
-              .then((response) => response.json())
-              .then((data) => data.title)
-          )
-        );
-        setFilmTitles(films);
-      }
-    };
+    fetchStarshipDetails();
+  }, [name]);
 
-    fetchPilots();
-    fetchFilms();
-  }, [starship]);  // Afegir `starship` com a dependència
+  if (!starship) {
+    return <p>Loading starship details...</p>;
+  }
 
   return (
     <div>
@@ -68,14 +77,14 @@ function StarshipsDetails() {
         Back
       </button>
       
-      {/* Botó de favoritos */}
+      {/* Botó de favorites */}
       <button
-        onClick={() => toggleFavorite(starship)} // Afegir o eliminar de favorites
+        onClick={() => toggleFavorite(starship)}
         style={{
           padding: '10px',
           backgroundColor: isFavorite ? 'red' : 'gray',
           color: 'white',
-          marginLeft: '10px', // Separar els botons
+          marginLeft: '10px',
           borderRadius: '5px',
           border: 'none',
           cursor: 'pointer',
@@ -100,8 +109,22 @@ function StarshipsDetails() {
       {/* Mostrar els pilots */}
       <h3>Pilots:</h3>
       <ul>
-        {pilotNames.length > 0 ? (
-          pilotNames.map((name, index) => <li key={index}>{name}</li>)
+        {pilots.length > 0 ? (
+          pilots.map((pilot, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                navigate(`/characters/${pilot.name}`, {
+                  state: { character: pilot },
+                })
+              }
+              style={{
+                cursor: 'pointer'
+              }}
+            >
+              {pilot.name}
+            </li>
+          ))
         ) : (
           <p>No pilots available</p>
         )}
@@ -110,8 +133,22 @@ function StarshipsDetails() {
       {/* Mostrar les pel·lícules */}
       <h3>Appears in the following films:</h3>
       <ul>
-        {filmTitles.length > 0 ? (
-          filmTitles.map((title, index) => <li key={index}>{title}</li>)
+        {films.length > 0 ? (
+          films.map((film, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                navigate(`/films/${film.title}`, {
+                  state: { film },
+                })
+              }
+              style={{
+                cursor: 'pointer'
+              }}
+            >
+              {film.title}
+            </li>
+          ))
         ) : (
           <p>No films available</p>
         )}

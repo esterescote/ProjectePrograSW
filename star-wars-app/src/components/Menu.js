@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "../styles.css";
-import searchIcon from "../assets/sable-laser.png"; // Assegura't que la imatge estigui a la carpeta indicada
-
 
 function Menu() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -52,28 +50,39 @@ function Menu() {
       )
     : [];
 
+  const extractIdFromUrl = (url) => {
+    const parts = url.split("/").filter(Boolean);
+    return parts[parts.length - 1];
+  };
+
+  const getLinkPath = (result) => {
+    const idOrName = encodeURIComponent(result.name || result.title || extractIdFromUrl(result.url));
+    switch (result.category) {
+      case "films":
+        return `/films/${idOrName}`;
+      case "characters":
+        return `/characters/${idOrName}`;
+      case "planets":
+        return `/planets/${idOrName}`;
+      case "species":
+        return `/species/${idOrName}`;
+      case "starships":
+        return `/starships/${idOrName}`;
+      default:
+        return "/";
+    }
+  };
+
   return (
     <header className="header">
       <nav className="menu">
         <ul>
-          <li>
-            <Link to="/films">Films</Link>
-          </li>
-          <li>
-            <Link to="/characters">Characters</Link>
-          </li>
-          <li>
-            <Link to="/planets">Planets</Link>
-          </li>
-          <li>
-            <Link to="/species">Species</Link>
-          </li>
-          <li>
-            <Link to="/starships">Starships</Link>
-          </li>
-          <li>
-            <Link to="/favorites">Favorites</Link>
-          </li>
+          <li><Link to="/films">Films</Link></li>
+          <li><Link to="/characters">Characters</Link></li>
+          <li><Link to="/planets">Planets</Link></li>
+          <li><Link to="/species">Species</Link></li>
+          <li><Link to="/starships">Starships</Link></li>
+          <li><Link to="/favorites">Favorites</Link></li>
         </ul>
       </nav>
 
@@ -84,19 +93,17 @@ function Menu() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-input styled-search"
-          
         />
-        
         {searchTerm && (
           <div className="results-grid">
-            {filteredResults.map((result, index) => (
+            {filteredResults.map((result) => (
               <Link
-                to={`/${result.category}/${index}`}
-                key={index}
+                to={getLinkPath(result)}
+                key={result.url}
                 className="result-card"
               >
                 <h3>{result.name || result.title}</h3>
-                <p>Category: {result.category}</p>
+                <p><strong>Category:</strong> {result.category}</p>
               </Link>
             ))}
           </div>
