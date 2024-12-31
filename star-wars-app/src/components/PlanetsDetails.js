@@ -11,6 +11,10 @@ function PlanetsDetails() {
   const [planet, setPlanet] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Afegim estats per controlar les seccions desplegables
+  const [showResidents, setShowResidents] = useState(false);
+  const [showFilms, setShowFilms] = useState(false);
+
   useEffect(() => {
     const fetchPlanetDetails = async () => {
       try {
@@ -113,51 +117,65 @@ function PlanetsDetails() {
       <p>Terrain: {planet.terrain}</p>
       <p>Surface water: {planet.surface_water}</p>
 
-      <h3>Residents:</h3>
-      <ul>
-        {planet.residents.length > 0 ? (
-          planet.residents.map((resident, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/characters/${resident.name}`, {
-                  state: { characterName: resident.name },
-                })
-              }
-              style={{
-                cursor: 'pointer',
-              }}
-            >
-              {resident.name}
-            </li>
-          ))
-        ) : (
-          <p>No residents available</p>
-        )}
-      </ul>
+      {/* Residents */}
+      <h3 className='desplegables'
+        onClick={() => setShowResidents(!showResidents)} 
+      >
+        Residents
+      </h3>
+      {showResidents && (
+        <ul className={`display-elements ${showResidents ? 'show' : ''}`}>
+          {planet.residents.length > 0 ? (
+            planet.residents.map((resident, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/characters/${resident.name}`, {
+                    state: { characterName: resident.name },
+                  })
+                }
+                style={{
+                  cursor: 'pointer',
+                }}
+              >
+                {resident.name}
+              </li>
+            ))
+          ) : (
+            <p>No residents available</p>
+          )}
+        </ul>
+      )}
 
-      <h3>Films:</h3>
-      <ul>
-        {planet.films.length > 0 ? (
-          planet.films.map((film, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/films/${film.title}`, {
-                  state: { film },
-                })
-              }
-              style={{
-                cursor: 'pointer',
-              }}
-            >
-              {film.title}
-            </li>
-          ))
-        ) : (
-          <p>No films available</p>
-        )}
-      </ul>
+      {/* Films */}
+      <h3 className='desplegables'
+        onClick={() => setShowFilms(!showFilms)} 
+      >
+        Films
+      </h3>
+      {showFilms && (
+        <ul className={`display-elements ${showFilms ? 'show' : ''}`}>
+          {planet.films.length > 0 ? (
+            planet.films.map((film, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/films/${film.title}`, {
+                    state: { film },
+                  })
+                }
+                style={{
+                  cursor: 'pointer',
+                }}
+              >
+                {film.title}
+              </li>
+            ))
+          ) : (
+            <p>No films available</p>
+          )}
+        </ul>
+      )}
     </div>
   );
 }

@@ -11,6 +11,10 @@ function SpeciesDetails() {
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const navigate = useNavigate();
 
+  // Afegim estats per controlar les seccions desplegables
+  const [showPeople, setShowPeople] = useState(false);
+  const [showFilms, setShowFilms] = useState(false);
+
   useEffect(() => {
     const fetchSpecieDetails = async () => {
       try {
@@ -94,50 +98,64 @@ function SpeciesDetails() {
       <p><strong>Language:</strong> {specie.language}</p>
       <p><strong>Homeworld:</strong> {homeworldName || 'Unknown'}</p>
 
-      <h3>People</h3>
-      {people.length > 0 ? (
-        <ul>
-          {people.map((person, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/characters/${person.name}`, {
-                  state: { characterName: person.name },
-                })
-              }
-              style={{
-                cursor: 'pointer'
-              }}
-            >
-              {person.name}
-            </li>
-          ))}
+      {/* People */}
+      <h3 className='desplegables'
+        onClick={() => setShowPeople(!showPeople)}
+      >
+        People
+      </h3>
+      {showPeople && (
+        <ul className={`display-elements ${showPeople ? 'show' : ''}`}>
+          {people.length > 0 ? (
+            people.map((person, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/characters/${person.name}`, {
+                    state: { characterName: person.name },
+                  })
+                }
+                style={{
+                  cursor: 'pointer'
+                }}
+              >
+                {person.name}
+              </li>
+            ))
+          ) : (
+            <p>No characters available.</p>
+          )}
         </ul>
-      ) : (
-        <p>No characters available.</p>
       )}
 
-      <h3>Films</h3>
-      {films.length > 0 ? (
-        <ul>
-          {films.map((film, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/films/${film.title}`, {
-                  state: { film },
-                })
-              }
-              style={{
-                cursor: 'pointer'
-              }}
-            >
-              {film.title}
-            </li>
-          ))}
+      {/* Films */}
+      <h3 className='desplegables'
+        onClick={() => setShowFilms(!showFilms)}
+      >
+        Films
+      </h3>
+      {showFilms && (
+        <ul className={`display-elements ${showFilms ? 'show' : ''}`}>
+          {films.length > 0 ? (
+            films.map((film, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/films/${film.title}`, {
+                    state: { film },
+                  })
+                }
+                style={{
+                  cursor: 'pointer'
+                }}
+              >
+                {film.title}
+              </li>
+            ))
+          ) : (
+            <p>No films available.</p>
+          )}
         </ul>
-      ) : (
-        <p>No films available.</p>
       )}
     </div>
   );

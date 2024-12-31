@@ -11,6 +11,9 @@ function StarshipsDetails() {
   const [pilots, setPilots] = useState([]); // Per desar els objectes complets dels pilots
   const [films, setFilms] = useState([]); // Per desar els objectes complets de les pel·lícules
 
+  const [showPilots, setShowPilots] = useState(false); // Controlar visibilitat de pilots
+  const [showFilms, setShowFilms] = useState(false); // Controlar visibilitat de films
+
   // Comprovar si la nau està en favorites
   const isFavorite = favorites.some((fav) => fav.url === starship?.url);
 
@@ -106,53 +109,65 @@ function StarshipsDetails() {
         <p><strong>Starship class:</strong> {starship.starship_class}</p>
       </div>
 
-      {/* Mostrar els pilots */}
-      <h3>Pilots:</h3>
-      <ul>
-        {pilots.length > 0 ? (
-          pilots.map((pilot, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/characters/${pilot.name}`, {
-                  state: { character: pilot },
-                })
-              }
-              style={{
-                cursor: 'pointer'
-              }}
-            >
-              {pilot.name}
-            </li>
-          ))
-        ) : (
-          <p>No pilots available</p>
-        )}
-      </ul>
+      {/* Pilots */}
+      <h3 className='desplegables'
+        onClick={() => setShowPilots(!showPilots)} 
+      >
+        Pilots
+      </h3>
+      {showPilots && (
+        <ul className={`display-elements ${showPilots ? 'show' : ''}`}>
+          {pilots.length > 0 ? (
+            pilots.map((pilot, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/characters/${pilot.name}`, {
+                    state: { character: pilot },
+                  })
+                }
+                style={{
+                  cursor: 'pointer'
+                }}
+              >
+                {pilot.name}
+              </li>
+            ))
+          ) : (
+            <p>No pilots available</p>
+          )}
+        </ul>
+      )}
 
-      {/* Mostrar les pel·lícules */}
-      <h3>Appears in the following films:</h3>
-      <ul>
-        {films.length > 0 ? (
-          films.map((film, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/films/${film.title}`, {
-                  state: { film },
-                })
-              }
-              style={{
-                cursor: 'pointer'
-              }}
-            >
-              {film.title}
-            </li>
-          ))
-        ) : (
-          <p>No films available</p>
-        )}
-      </ul>
+      {/* Films */}
+      <h3 className='desplegables'
+        onClick={() => setShowFilms(!showFilms)}
+      >
+        Appears in the following films
+      </h3>
+      {showFilms && (
+        <ul className={`display-elements ${showFilms ? 'show' : ''}`}>
+          {films.length > 0 ? (
+            films.map((film, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/films/${film.title}`, {
+                    state: { film },
+                  })
+                }
+                style={{
+                  cursor: 'pointer'
+                }}
+              >
+                {film.title}
+              </li>
+            ))
+          ) : (
+            <p>No films available</p>
+          )}
+        </ul>
+      )}
     </div>
   );
 }

@@ -8,10 +8,10 @@ function CharacterDetails() {
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const characterName = location.state?.characterName;
 
-
   const [character, setCharacter] = useState(null);
   const [filmTitles, setFilmTitles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showFilms, setShowFilms] = useState(false); // Afegim un estat per mostrar/ocultar les pel·lícules
 
   // Funció per carregar tots els personatges de totes les pàgines
   const fetchAllCharacters = async () => {
@@ -29,10 +29,7 @@ function CharacterDetails() {
   useEffect(() => {
     const fetchCharacterDetails = async () => {
       try {
-        // Carregar tots els personatges
         const allCharacters = await fetchAllCharacters();
-
-        // Trobar el personatge corresponent
         const foundCharacter = allCharacters.find(
           (char) => char.name.toLowerCase() === characterName.toLowerCase()
         );
@@ -43,21 +40,18 @@ function CharacterDetails() {
           return;
         }
 
-        // Carregar dades addicionals: món natal i espècie
         const homeworld = await fetch(foundCharacter.homeworld).then((res) => res.json());
         const species =
           foundCharacter.species.length > 0
             ? await fetch(foundCharacter.species[0]).then((res) => res.json())
             : { name: 'Unknown' };
 
-        // Carregar imatge del personatge
         const imageResponse = await fetch('https://akabab.github.io/starwars-api/api/all.json');
         const imageData = await imageResponse.json();
         const characterImage =
           imageData.find((img) => img.name.toLowerCase() === foundCharacter.name.toLowerCase())
             ?.image || null;
 
-        // Construir els detalls complets del personatge
         const detailedCharacter = {
           ...foundCharacter,
           homeworld: homeworld.name,
@@ -67,7 +61,6 @@ function CharacterDetails() {
 
         setCharacter(detailedCharacter);
 
-        // Carregar títols de les pel·lícules
         const titles = await Promise.all(
           foundCharacter.films.map((filmUrl) =>
             fetch(filmUrl)
@@ -149,20 +142,27 @@ function CharacterDetails() {
       <p>Homeworld: {character.homeworld}</p>
       <p>Species: {character.species}</p>
 
-      <h3>Films:</h3>
-      <ul>
-        {filmTitles.map((film, index) => (
-          <li
-            key={index}
-            onClick={() =>
-              navigate(`/films/${film.title}`, { state: { film: film.details } })
-            }
-            style={{ cursor: 'pointer' }}
-          >
-            {film.title}
-          </li>
-        ))}
-      </ul>
+      {/* Secció Films */}
+      <h3 className="desplegables"
+        onClick={() => setShowFilms(!showFilms)} // Alternem entre mostrar/ocultar
+      >
+        Films
+      </h3>
+      {showFilms && (
+        <ul className={`display-elements ${showFilms ? 'show' : ''}`}>
+          {filmTitles.map((film, index) => (
+            <li
+              key={index}
+              onClick={() =>
+                navigate(`/films/${film.title}`, { state: { film: film.details } })
+              }
+              style={{ cursor: 'pointer' }}
+            >
+              {film.title}
+            </li>
+          ))}
+        </ul>
+      )}
     </div>
   );
 }

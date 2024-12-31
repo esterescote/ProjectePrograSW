@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FavoritesContext } from '../context/FavoritesContext';  // Si estàs utilitzant aquest context
-import { useLocation, useNavigate} from 'react-router-dom';
+import { FavoritesContext } from '../context/FavoritesContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function FilmDetails() {
   const location = useLocation();
@@ -8,10 +8,15 @@ function FilmDetails() {
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const film = location.state?.film; // Asegura't que film està disponible
 
-  const [characterNames, setCharacterNames] = useState([]);  // Per desar els noms dels personatges
-  const [planetNames, setPlanetNames] = useState([]);  // Per desar els noms dels planetes
-  const [starshipNames, setStarshipNames] = useState([]);  // Per desar els noms de les starships
-  const [speciesNames, setSpeciesNames] = useState([]);  // Per desar els noms de les species
+  const [characterNames, setCharacterNames] = useState([]);
+  const [planetNames, setPlanetNames] = useState([]);
+  const [starshipNames, setStarshipNames] = useState([]);
+  const [speciesNames, setSpeciesNames] = useState([]);
+
+  const [showCharacters, setShowCharacters] = useState(false);
+  const [showPlanets, setShowPlanets] = useState(false);
+  const [showStarships, setShowStarships] = useState(false);
+  const [showSpecies, setShowSpecies] = useState(false);
 
   useEffect(() => {
     const fetchCharacterNames = async () => {
@@ -127,90 +132,104 @@ function FilmDetails() {
       <p>Release Date: {film.release_date}</p>
       <p>Opening: {film.opening_crawl}</p>
 
-      <h3>Characters:</h3>
-      <ul className="display-elements">
-        {characterNames.length > 0 ? (
-          characterNames.map((name, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/characters/${name}`, { state: { characterName: name } })
-              }
-              style={{ cursor: 'pointer' }}
-            >
-              {name}
-            </li>
-          ))
-        ) : (
-          <p>No characters available</p>
-        )}
-      </ul>
+      {/* Mostrar títol i subcategoria amb alternança */}
+      <h3 className="desplegables" onClick={() => setShowCharacters(!showCharacters)} style={{ cursor: 'pointer' }}>
+        Characters
+      </h3>
+      {showCharacters && (
+        <ul className="display-elements">
+          {characterNames.length > 0 ? (
+            characterNames.map((name, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/characters/${name}`, { state: { characterName: name } })
+                }
+                style={{ cursor: 'pointer' }}
+              >
+                {name}
+              </li>
+            ))
+          ) : (
+            <p>No characters available</p>
+          )}
+        </ul>
+      )}
 
-      {/* Mostrar planetes */}
-      <h3>Planets:</h3>
-      <ul className="display-elements">
-        {planetNames.length > 0 ? (
-          planetNames.map((name, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/planets/${name}`, { state: { planetName: name } })
-              }
-              style={{ cursor: 'pointer' }}
-            >
-              {name}
-            </li>
-          ))
-        ) : (
-          <p>No planets available</p>
-        )}
-      </ul>
+      <h3 className="desplegables" onClick={() => setShowPlanets(!showPlanets)} style={{ cursor: 'pointer' }}>
+        Planets
+      </h3>
+      {showPlanets && (
+        <ul className="display-elements">
+          {planetNames.length > 0 ? (
+            planetNames.map((name, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/planets/${name}`, { state: { planetName: name } })
+                }
+                style={{ cursor: 'pointer' }}
+              >
+                {name}
+              </li>
+            ))
+          ) : (
+            <p>No planets available</p>
+          )}
+        </ul>
+      )}
 
-      {/* Mostrar starships */}
-      <h3>Starships:</h3>
-      <ul className="display-elements">
-        {starshipNames.length > 0 ? (
-          starshipNames.map((name, index) => (
-            <li
-              key={index}
-              onClick={() => {
-                // Trobar l'objecte complet de la nau per URL
-                const starship = film.starships[index]; // Usar l'índex per obtenir el URL de la starship
-                fetch(starship)
-                  .then((response) => response.json())
-                  .then((data) => {
-                    navigate(`/starships/${data.name}`, { state: { starship: data } });
-                  });
-              }}
-              style={{ cursor: 'pointer' }}
-            >
-              {name}
-            </li>
-          ))
-        ) : (
-          <p>No starships available</p>
-        )}
-      </ul>
+      <h3 className="desplegables" onClick={() => setShowStarships(!showStarships)} style={{ cursor: 'pointer' }}>
+        Starships
+      </h3>
+      {showStarships && (
+        <ul className="display-elements">
+          {starshipNames.length > 0 ? (
+            starshipNames.map((name, index) => (
+              <li
+                key={index}
+                onClick={() => {
+                  // Trobar l'objecte complet de la nau per URL
+                  const starship = film.starships[index]; // Usar l'índex per obtenir el URL de la starship
+                  fetch(starship)
+                    .then((response) => response.json())
+                    .then((data) => {
+                      navigate(`/starships/${data.name}`, { state: { starship: data } });
+                    });
+                }}
+                style={{ cursor: 'pointer' }}
+              >
+                {name}
+              </li>
+            ))
+          ) : (
+            <p>No starships available</p>
+          )}
+        </ul>
+      )}
 
-      {/* Mostrar species */}
-      <h3>Species:</h3>
-      <ul className="display-elements">
-        {speciesNames.length > 0 ? (
-          speciesNames.map((name, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/species/${name}`, { state: { speciesName: name } })
-              }
-              style={{ cursor: 'pointer' }}
-            >
-              {name}
-            </li>
-          ))
-        ) : (
-          <p>No species available</p>
-        )}
-      </ul>
+      <h3 className="desplegables" onClick={() => setShowSpecies(!showSpecies)} style={{ cursor: 'pointer' }}>
+        Species
+      </h3>
+      {showSpecies && (
+        <ul className="display-elements">
+          {speciesNames.length > 0 ? (
+            speciesNames.map((name, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/species/${name}`, { state: { speciesName: name } })
+                }
+                style={{ cursor: 'pointer' }}
+              >
+                {name}
+              </li>
+            ))
+          ) : (
+            <p>No species available</p>
+          )}
+        </ul>
+      )}
     </div>
   );
 }

@@ -330,6 +330,16 @@ h2
   margin-bottom: 20px;
 }
 
+.desplegables{
+  font-size: 30px;
+}
+.desplegables:hover{
+  cursor: pointer;
+  color: #ffcc00;
+
+
+}
+
 ul 
 {
   list-style-type: none;
@@ -351,7 +361,6 @@ li h3
   color: #ffcc00;
   margin-bottom: 10px;
 }
-
 
 li p 
 {
