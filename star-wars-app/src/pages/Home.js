@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 const TMDB_API_KEY = '4d3cb710ab798774158802e72c50dfa2'; // Substitueix per la teva clau d'API
 
 // Mapeja els títols de les pel·lícules de Star Wars amb els seus IDs a TMDB
-const starWarsMovieIds = {
+const starWarsMovieIds = 
+{
   "A New Hope": 11,  // ID de la pel·lícula 'Star Wars: Episode IV - A New Hope'
   "The Empire Strikes Back": 1891,  // ID de la pel·lícula 'Star Wars: Episode V - The Empire Strikes Back'
   "Return of the Jedi": 1892,  // ID de la pel·lícula 'Star Wars: Episode VI - Return of the Jedi'
@@ -14,12 +15,14 @@ const starWarsMovieIds = {
   "The Force Awakens": 140607,  // ID de la pel·lícula 'Star Wars: Episode VII - The Force Awakens'
 };
 
-function Home() {
+function Home() 
+{
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  useEffect(() => {
+  useEffect(() => 
+  {
     const fetchFilms = async () => {
       try {
         // Obtenir les pel·lícules de SWAPI

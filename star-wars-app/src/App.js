@@ -29,7 +29,6 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/films" element={<Films />} />
           <Route path="/films/:id" element={<FilmDetails />} />
-          <Route path="/films/:title" element={<FilmDetails />} />
           <Route path="/characters" element={<Characters />} />
           <Route path="/characters/:name" element={<CharacterDetails />} />
           <Route path="/planets" element={<Planets />} />

@@ -2,13 +2,15 @@ import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';  // Si estàs utilitzant aquest context
 import { useNavigate } from 'react-router-dom';
 
-function Characters() {
+function Characters() 
+{
   const [characters, setCharacters] = useState([]);
   const [loading, setLoading] = useState(true);
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const navigate = useNavigate();
 
-  const fetchAllCharacters = async () => {
+  const fetchAllCharacters = async () => 
+  {
     let allCharacters = [];
     let nextUrl = 'https://swapi.py4e.com/api/people/';
     while (nextUrl) {
@@ -20,14 +22,18 @@ function Characters() {
     return allCharacters;
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
+  useEffect(() => 
+  {
+    const fetchData = async () => 
+    {
+      try 
+      {
         const allCharacters = await fetchAllCharacters();
 
         // Obtenim les dades addicionals com el món natal i l'espècie
         const detailedCharacters = await Promise.all(
-          allCharacters.map(async (character) => {
+          allCharacters.map(async (character) => 
+          {
             const homeworld = await fetch(character.homeworld).then((res) => res.json());
             const species =
               character.species.length > 0
@@ -44,9 +50,11 @@ function Characters() {
 
         const fetchImagesPromise = fetch('https://akabab.github.io/starwars-api/api/all.json')
           .then((response) => response.json())
-          .then((images) => {
+          .then((images) => 
+          {
             const imageMap = {};
-            images.forEach((image) => {
+            images.forEach((image) => 
+            {
               imageMap[image.name.toLowerCase()] = image.image;
             });
             return imageMap;
