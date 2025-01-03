@@ -2,7 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FavoritesContext } from '../context/FavoritesContext';
 
-function SpeciesDetails() {
+function SpeciesDetails() 
+{
   const { name } = useParams();
   const [specie, setSpecie] = useState(null);
   const [homeworldName, setHomeworldName] = useState('');
@@ -15,9 +16,12 @@ function SpeciesDetails() {
   const [showPeople, setShowPeople] = useState(false);
   const [showFilms, setShowFilms] = useState(false);
 
-  useEffect(() => {
-    const fetchSpecieDetails = async () => {
-      try {
+  useEffect(() => 
+  {
+    const fetchSpecieDetails = async () => 
+    {
+      try 
+      {
         const response = await fetch(`https://swapi.py4e.com/api/species/?search=${name}`);
         const data = await response.json();
         const specieData = data.results[0];
@@ -52,7 +56,7 @@ function SpeciesDetails() {
   }, [name]);
 
   if (!specie) {
-    return <p>Loading species details...</p>;
+    return <p>Species not found.</p>;
   }
 
   return (

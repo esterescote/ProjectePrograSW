@@ -28,11 +28,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/films" element={<Films />} />
-          <Route path="/films/:id" element={<FilmDetails />} />
+          <Route path="/films/:title" element={<FilmDetails />} />
           <Route path="/characters" element={<Characters />} />
           <Route path="/characters/:name" element={<CharacterDetails />} />
           <Route path="/planets" element={<Planets />} />
-          <Route path="/planets/:planetName" element={<PlanetsDetails />} />
+          <Route path="/planets/:name" element={<PlanetsDetails />} />
           <Route path="/species" element={<Species />} />
           <Route path="/species/:name" element={<SpeciesDetails />} />
           <Route path="/starships" element={<Starships />} />

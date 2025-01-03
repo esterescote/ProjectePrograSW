@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function CharacterDetails() {
-  const location = useLocation();
+  const { name } = useParams(); // Utilitzem useParams per obtenir el nom des de la URL
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
-  const characterName = location.state?.characterName;
 
   const [character, setCharacter] = useState(null);
   const [filmTitles, setFilmTitles] = useState([]);
@@ -31,7 +30,7 @@ function CharacterDetails() {
       try {
         const allCharacters = await fetchAllCharacters();
         const foundCharacter = allCharacters.find(
-          (char) => char.name.toLowerCase() === characterName.toLowerCase()
+          (char) => char.name.toLowerCase() === name.toLowerCase() // Cercar per nom directament
         );
 
         if (!foundCharacter) {
@@ -76,10 +75,10 @@ function CharacterDetails() {
       }
     };
 
-    if (characterName) {
+    if (name) {
       fetchCharacterDetails();
     }
-  }, [characterName]);
+  }, [name]);
 
   if (loading) {
     return <p>Loading character details...</p>;

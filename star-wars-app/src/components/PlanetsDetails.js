@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { FavoritesContext } from '../context/FavoritesContext';
 
 function PlanetsDetails() {
-  const location = useLocation();
+  const { name } = useParams(); // Obtenim el nom del planeta des de la URL
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
 
-  const planetName = location.state?.planetName;
   const [planet, setPlanet] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -26,7 +25,7 @@ function PlanetsDetails() {
           const response = await fetch(nextUrl);
           const data = await response.json();
           foundPlanet = data.results.find(
-            (planet) => planet.name.toLowerCase() === planetName.toLowerCase()
+            (planet) => planet.name.toLowerCase() === name.toLowerCase() // Usar el 'name' obtingut de la URL
           );
           nextUrl = data.next; // Obtenir la següent pàgina si existeix
         }
@@ -57,10 +56,10 @@ function PlanetsDetails() {
       }
     };
 
-    if (planetName) {
+    if (name) {
       fetchPlanetDetails();
     }
-  }, [planetName]);
+  }, [name]); // Recarregar quan el 'name' canviï
 
   if (loading) {
     return <p>Loading planet details...</p>;
@@ -118,9 +117,7 @@ function PlanetsDetails() {
       <p>Surface water: {planet.surface_water}</p>
 
       {/* Residents */}
-      <h3 className='desplegables'
-        onClick={() => setShowResidents(!showResidents)} 
-      >
+      <h3 className='desplegables' onClick={() => setShowResidents(!showResidents)}>
         Residents
       </h3>
       {showResidents && (
@@ -148,9 +145,7 @@ function PlanetsDetails() {
       )}
 
       {/* Films */}
-      <h3 className='desplegables'
-        onClick={() => setShowFilms(!showFilms)} 
-      >
+      <h3 className='desplegables' onClick={() => setShowFilms(!showFilms)}>
         Films
       </h3>
       {showFilms && (

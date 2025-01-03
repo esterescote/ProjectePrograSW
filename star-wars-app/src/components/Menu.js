@@ -77,7 +77,7 @@ function Menu() {
       return true;
     })
     .map((item) => item);
-
+    
   // Extracció d'id de la URL
   const extractIdFromUrl = (url) => {
     const parts = url.split("/").filter(Boolean);
@@ -87,7 +87,8 @@ function Menu() {
   // Generar ruta per cada element
   const getLinkPath = (result) => {
     const idOrName = encodeURIComponent(result.name || result.title || extractIdFromUrl(result.url));
-    switch (result.category) {
+    switch (result.category) 
+    {
       case "films":
         return `/films/${idOrName}`;
       case "characters":
@@ -169,15 +170,20 @@ function Menu() {
 
         {/* Resultats de la cerca */}
         {searchTerm && (
-          <div className="results-grid">
-            {filteredResults.map((result) => (
-              <Link to={getLinkPath(result)} key={result.url} className="result-card">
-                <h3>{result.name || result.title}</h3>
-                <p><strong>Category:</strong> {result.category}</p>
-              </Link>
-            ))}
-          </div>
-        )}
+        <div className="results-grid">
+          {filteredResults.map((result) => (
+            <Link 
+              to={getLinkPath(result)} 
+              key={result.url} 
+              className="result-card"
+              onClick={() => console.log("Element clicat:", result)} // Aquí s'afegeix el console.log
+            >
+              <h3>{result.name || result.title}</h3>
+              <p><strong>Category:</strong> {result.category}</p>
+            </Link>
+          ))}
+        </div>
+      )}
       </div>
     </header>
   );

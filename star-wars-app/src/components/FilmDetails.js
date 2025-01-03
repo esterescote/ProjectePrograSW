@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { FavoritesContext } from '../context/FavoritesContext';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 function FilmDetails() {
-  const location = useLocation();
+  const { title } = useParams(); // Utilitzem useParams per obtenir el títol des de la URL
   const navigate = useNavigate();
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
-  const film = location.state?.film; // Asegura't que film està disponible
 
+  const [film, setFilm] = useState(null);
   const [characterNames, setCharacterNames] = useState([]);
   const [planetNames, setPlanetNames] = useState([]);
   const [starshipNames, setStarshipNames] = useState([]);
@@ -18,64 +18,94 @@ function FilmDetails() {
   const [showStarships, setShowStarships] = useState(false);
   const [showSpecies, setShowSpecies] = useState(false);
 
+  // Funció per carregar totes les pel·lícules de la API
+  const fetchAllFilms = async () => {
+    const response = await fetch('https://swapi.py4e.com/api/films/');
+    const data = await response.json();
+    return data.results;
+  };
+
   useEffect(() => {
-    const fetchCharacterNames = async () => {
-      if (film && film.characters && film.characters.length > 0) {
-        const names = await Promise.all(
-          film.characters.map((characterUrl) =>
-            fetch(characterUrl)
-              .then((response) => response.json())
-              .then((data) => data.name)
-          )
+    const fetchFilmDetails = async () => {
+      try {
+        const allFilms = await fetchAllFilms();
+        const foundFilm = allFilms.find(
+          (f) => f.title.toLowerCase() === title.toLowerCase() // Cercar pel títol directament
         );
-        setCharacterNames(names);
+
+        if (!foundFilm) {
+          console.error('Film not found');
+          return;
+        }
+
+        setFilm(foundFilm);
+
+        // Fetch characters, planets, starships, species data
+        const fetchCharacterNames = async () => {
+          if (foundFilm.characters && foundFilm.characters.length > 0) {
+            const names = await Promise.all(
+              foundFilm.characters.map((characterUrl) =>
+                fetch(characterUrl)
+                  .then((response) => response.json())
+                  .then((data) => data.name)
+              )
+            );
+            setCharacterNames(names);
+          }
+        };
+
+        const fetchPlanetNames = async () => {
+          if (foundFilm.planets && foundFilm.planets.length > 0) {
+            const names = await Promise.all(
+              foundFilm.planets.map((planetUrl) =>
+                fetch(planetUrl)
+                  .then((response) => response.json())
+                  .then((data) => data.name)
+              )
+            );
+            setPlanetNames(names);
+          }
+        };
+
+        const fetchStarshipNames = async () => {
+          if (foundFilm.starships && foundFilm.starships.length > 0) {
+            const names = await Promise.all(
+              foundFilm.starships.map((starshipUrl) =>
+                fetch(starshipUrl)
+                  .then((response) => response.json())
+                  .then((data) => data.name)
+              )
+            );
+            setStarshipNames(names);
+          }
+        };
+
+        const fetchSpeciesNames = async () => {
+          if (foundFilm.species && foundFilm.species.length > 0) {
+            const names = await Promise.all(
+              foundFilm.species.map((speciesUrl) =>
+                fetch(speciesUrl)
+                  .then((response) => response.json())
+                  .then((data) => data.name)
+              )
+            );
+            setSpeciesNames(names);
+          }
+        };
+
+        fetchCharacterNames();
+        fetchPlanetNames();
+        fetchStarshipNames();
+        fetchSpeciesNames();
+      } catch (error) {
+        console.error('Error fetching film details:', error);
       }
     };
 
-    const fetchPlanetNames = async () => {
-      if (film && film.planets && film.planets.length > 0) {
-        const names = await Promise.all(
-          film.planets.map((planetUrl) =>
-            fetch(planetUrl)
-              .then((response) => response.json())
-              .then((data) => data.name)
-          )
-        );
-        setPlanetNames(names);
-      }
-    };
-
-    const fetchStarshipNames = async () => {
-      if (film && film.starships && film.starships.length > 0) {
-        const names = await Promise.all(
-          film.starships.map((starshipUrl) =>
-            fetch(starshipUrl)
-              .then((response) => response.json())
-              .then((data) => data.name)
-          )
-        );
-        setStarshipNames(names);
-      }
-    };
-
-    const fetchSpeciesNames = async () => {
-      if (film && film.species && film.species.length > 0) {
-        const names = await Promise.all(
-          film.species.map((speciesUrl) =>
-            fetch(speciesUrl)
-              .then((response) => response.json())
-              .then((data) => data.name)
-          )
-        );
-        setSpeciesNames(names);
-      }
-    };
-
-    fetchCharacterNames();
-    fetchPlanetNames();
-    fetchStarshipNames();
-    fetchSpeciesNames();
-  }, [film]);
+    if (title) {
+      fetchFilmDetails();
+    }
+  }, [title]);
 
   if (!film) {
     return <p>No film details available.</p>;
@@ -189,8 +219,7 @@ function FilmDetails() {
               <li
                 key={index}
                 onClick={() => {
-                  // Trobar l'objecte complet de la nau per URL
-                  const starship = film.starships[index]; // Usar l'índex per obtenir el URL de la starship
+                  const starship = film.starships[index];
                   fetch(starship)
                     .then((response) => response.json())
                     .then((data) => {
