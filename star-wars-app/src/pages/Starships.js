@@ -65,46 +65,49 @@ function Starships() {
     <div>
       <h2>STARSHIPS</h2>
       {loading ? (
-        <p>Loading starships...</p>
+        <p className='breu'>Loading starships...</p>
       ) : (
         <>
           <ul className="display-elements">
             {currentStarships.map((starship) => (
               <li key={starship.url}>
                 <h3>{starship.name}</h3>
-                <p>Model: {starship.model}</p>
-                <p>Manufacturer: {starship.manufacturer}</p>
-                <p>Cost: {starship.cost_in_credits} credits</p>
-                <button
-                  onClick={() => showDetails(starship)} // Navegar als detalls
-                  style={{
-                    backgroundColor: 'gray',
-                    color: 'white',
-                    padding: '10px',
-                    margin: '10px',
-                    borderRadius: '5px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Show Details
-                </button>
-                <button
-                  onClick={() => toggleFavorite(starship)}
-                  style={{
-                    backgroundColor: favorites.some((fav) => fav.url === starship.url) ? 'red' : 'gray',
-                    color: 'white',
-                    padding: '10px',
-                    margin: '10px',
-                    borderRadius: '5px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {favorites.some((fav) => fav.url === starship.url)
-                    ? 'Remove from Favorites'
-                    : 'Add to Favorites'}
-                </button>
+                <p className='breu'><strong>Model: </strong>{starship.model}</p>
+                <p className='breu'><strong>Manufacturer: </strong>{starship.manufacturer}</p>
+                <p className='breu'><strong>Cost: </strong>{starship.cost_in_credits} credits</p>
+                <div className='button-DF'>
+                  <button
+                    onClick={() => showDetails(starship)} // Navegar als detalls
+                    style={{
+                      backgroundColor: 'gray',
+                      color: 'white',
+                      padding: '10px',
+                      margin: '10px',
+                      borderRadius: '5px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Show Details
+                  </button>
+                  <button
+                    onClick={() => toggleFavorite(starship)}
+                    style={{
+                      backgroundColor: favorites.some((fav) => fav.url === starship.url) ? 'red' : 'gray',
+                      color: 'white',
+                      padding: '10px',
+                      margin: '10px',
+                      borderRadius: '5px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {favorites.some((fav) => fav.url === starship.url)
+                      ? 'Remove from Favorites'
+                      : 'Add to Favorites'}
+                  </button>
+                </div>
+                
               </li>
             ))}
           </ul>
@@ -118,10 +121,12 @@ function Starships() {
                 style={{
                   margin: '5px',
                   padding: '10px',
-                  backgroundColor: page === currentPage ? 'blue' : 'gray',
+                  backgroundColor: page === currentPage ? '#FFCC00' : 'gray',
                   color: 'white',
                   borderRadius: '5px',
                   border: 'none',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   cursor: 'pointer',
                 }}
               >

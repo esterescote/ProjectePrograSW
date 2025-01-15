@@ -81,61 +81,42 @@ function CharacterDetails() {
   }, [name]);
 
   if (loading) {
-    return <p>Loading character details...</p>;
+    return <p className='breu'>Loading character details...</p>;
   }
 
   if (!character) {
-    return <p>Character not found.</p>;
+    return <p className='breu'>Character not found.</p>;
   }
 
   return (
-    <div>
-      <button
-        onClick={() => navigate(-1)}
-        style={{
-          backgroundColor: 'gray',
-          color: 'white',
-          padding: '10px',
-          margin: '10px',
-          borderRadius: '5px',
-          border: 'none',
-          cursor: 'pointer',
-          marginBottom: '20px',
-        }}
-      >
-        Back
-      </button>
-      <button
-        onClick={() => toggleFavorite(character)}
-        style={{
-          backgroundColor: favorites.some((fav) => fav.url === character.url) ? 'red' : 'gray',
-          color: 'white',
-          padding: '10px',
-          margin: '10px',
-          borderRadius: '5px',
-          border: 'none',
-          cursor: 'pointer',
-        }}
-      >
-        {favorites.some((fav) => fav.url === character.url)
-          ? 'Remove from Favorites'
-          : 'Add to Favorites'}
-      </button>
-
+    <div className="character-details-container">
+      <div className="header-buttons">
+        <button onClick={() => navigate(-1)} className="btn back-btn">
+          Back
+        </button>
+        <button
+          onClick={() => toggleFavorite(character)}
+          className={`btn favorite-btn ${
+            favorites.some((fav) => fav.url === character.url) ? 'active' : ''
+          }`}
+        >
+          {favorites.some((fav) => fav.url === character.url)
+            ? 'Remove from Favorites'
+            : 'Add to Favorites'}
+        </button>
+      </div>
+  
+      <div className="character-header">
         <h2>{character.name}</h2>
-      <div className='details-container'>
-
-        <div className='details-img'>
-            {character.image && (
-            <img
-              src={character.image}
-              alt={character.name}
-              style={{ width: '200px', height: 'auto', marginBottom: '20px' }}
-            />
-            )}
+      </div>
+  
+      <div className="character-content">
+        <div className="character-image">
+          {character.image && (
+            <img src={character.image} alt={character.name} />
+          )}
         </div>
-
-        <div className='details-content'>
+        <div className="character-details">
           <p><strong>Height: </strong>{character.height} cm</p>
           <p><strong>Mass: </strong>{character.mass} kg</p>
           <p><strong>Hair color: </strong>{character.hair_color}</p>
@@ -146,30 +127,27 @@ function CharacterDetails() {
           <p><strong>Homeworld: </strong>{character.homeworld}</p>
           <p><strong>Species: </strong>{character.species}</p>
         </div>
-        </div>
-        <div className='related-content'>
-          {/* Secció Films */}
-          <h3 className="desplegables"
-            onClick={() => setShowFilms(!showFilms)} // Alternem entre mostrar/ocultar
-          >
-            Films
-          </h3>
-          {showFilms && (
-            <ul className={`display-elements ${showFilms ? 'show' : ''}`}>
-              {filmTitles.map((film, index) => (
-                <li
-                  key={index}
-                  onClick={() =>
-                    navigate(`/films/${film.title}`, { state: { film: film.details } })
-                  }
-                  style={{ cursor: 'pointer' }}
-                >
-                  {film.title}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+      </div>
+  
+      <div className="character-films">
+        <h3 onClick={() => setShowFilms(!showFilms)} className="desplegables">
+          Films
+        </h3>
+        {showFilms && (
+          <ul>
+            {filmTitles.map((film, index) => (
+              <li
+                key={index}
+                onClick={() =>
+                  navigate(`/films/${film.title}`, { state: { film: film.details } })
+                }
+              >
+                {film.title}
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

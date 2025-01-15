@@ -417,20 +417,12 @@ body
   align-items: center; /* Centra els elements verticalment (si és necessari) */
   width: 100%; /* Assegura que el contenidor ocupi tot l'amplada disponible */
 }
-
-/* Efecte per als botons deshabilitats */
-.pagination button:disabled {
-  background-color: lightgray; /* Color més clar quan el botó està deshabilitat */
-  cursor: not-allowed; /* El cursor indica que no es pot fer clic */
-}
-
 .films-container {
   display: flex;
   flex-wrap: wrap; /* Això permet que les pel·lícules es moguin a la següent línia quan no hi hagi espai */
   gap: 20px; /* Espai entre les pel·lícules */
   justify-content: center; /* Centra les pel·lícules horitzontalment */
 }
-
 .film-card {
   background-color: #333;
   color: white;
@@ -449,6 +441,20 @@ body
   background-color: #444;
 }
 
+.titol-h2
+{
+  text-align: center;
+  color: #ffcc00;;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.titol-p
+{
+  color: #ffffff;
+  font-size: 2.5rem;
+  text-align: center;
+}
 
 h2 
 {
@@ -510,7 +516,7 @@ a:hover
   text-decoration: underline;
 }
 
-p 
+.breu
 {
   text-align: center;
   font-size: 1.2rem;
@@ -620,35 +626,101 @@ font-weight: bold;
 margin-top: 30px;
 }
 
-.details-container {
+/* Contenidor principal */
+.character-details-container {
+  color: #ffd700;
+  padding: 20px;
+  max-width: 800px;
+  margin: 20px auto;
+}
+
+/* Botons */
+.header-buttons {
   display: flex;
-  flex-direction: row; /* Col·loca els elements en fila */
-  align-items: center; /* Alinea verticalment els elements al centre */
-  gap: 20px; /* Afegeix un espai entre els elements */
+  justify-content: space-between;
+  margin-bottom: 20px;
 }
 
-/* Element de la imatge */
-.details-img {
-  display: flex; /* Utilitza Flexbox al contenidor de la imatge */
-  justify-content: center; /* Centra horitzontalment */
-  align-items: center; /* Centra verticalment */
-  width: 200px;
-  height: auto; /* O defineix una alçada fixa si vols */
+.btn {
+  background-color: gray;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.btn:hover {
+  background-color: #555;
+}
+
+.favorite-btn.active {
+  background-color: red;
+}
+
+/* Contingut del personatge */
+.character-content {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+/* Imatge del personatge */
+.character-image img {
+  width: auto;
+  height: 350px;
   border-radius: 10px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* Contingut textual o informació */
-.details-content {
-  flex: 1; /* Fes que ocupi l'espai restant, si cal */
-  padding: 10px;
+/* Detalls */
+.character-details {
+  background-color: #333333;
+  padding: 15px;
+  border-radius: 10px;
+  width: 100%;
 }
-/*.related-content
+
+.character-details p {
+  color: white;
+}
+
+/* Secció de pel·lícules */
+.character-films {
+  margin-top: 20px;
+  color: white;
+  transition: color 0.3s;
+}
+
+.character-films li {
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.character-films li:hover {
+  color: #ffd700;
+}
+
+.pagination
 {
+  display: flex;
+  justify-content: center;
+}
 
-}*/
+h3
+{
+  display: flex;
+  justify-content: center;
+}
 
-
+.button-DF
+{
+  display: flex;
+  justify-content: center;
+}
 
 /* Responsive */
 @media (max-width: 768px) 

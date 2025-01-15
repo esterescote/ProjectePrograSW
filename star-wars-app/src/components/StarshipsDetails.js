@@ -56,13 +56,11 @@ function StarshipsDetails() {
   }, [name]);
 
   if (!starship) {
-    return <p>Loading starship details...</p>;
+    return <p className='breu'>Loading starship details...</p>;
   }
 
   return (
-    <div>
-      <h2>{starship.name}</h2>
-      
+    <div>      
       {/* Botó de tornada */}
       <button
         onClick={() => navigate(-1)}
@@ -79,7 +77,6 @@ function StarshipsDetails() {
       >
         Back
       </button>
-      
       {/* Botó de favorites */}
       <button
         onClick={() => toggleFavorite(starship)}
@@ -95,18 +92,19 @@ function StarshipsDetails() {
       >
         {isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
       </button>
-
+      
+      <h2>{starship.name}</h2>
       <div>
-        <p><strong>Model:</strong> {starship.model}</p>
-        <p><strong>Manufacturer:</strong> {starship.manufacturer}</p>
-        <p><strong>Cost:</strong> {starship.cost_in_credits} credits</p>
-        <p><strong>Length:</strong> {starship.length} meters</p>
-        <p><strong>Max speed:</strong> {starship.max_atmosphering_speed} km/h</p>
-        <p><strong>Crew:</strong> {starship.crew}</p>
-        <p><strong>Passengers:</strong> {starship.passengers}</p>
-        <p><strong>Cargo capacity:</strong> {starship.cargo_capacity} kg</p>
-        <p><strong>Consumables:</strong> {starship.consumables}</p>
-        <p><strong>Starship class:</strong> {starship.starship_class}</p>
+        <p className='breu'><strong>Model:</strong> {starship.model}</p>
+        <p className='breu'><strong>Manufacturer:</strong> {starship.manufacturer}</p>
+        <p className='breu'><strong>Cost:</strong> {starship.cost_in_credits} credits</p>
+        <p className='breu'><strong>Length:</strong> {starship.length} meters</p>
+        <p className='breu'><strong>Max speed:</strong> {starship.max_atmosphering_speed} km/h</p>
+        <p className='breu'><strong>Crew:</strong> {starship.crew}</p>
+        <p className='breu'><strong>Passengers:</strong> {starship.passengers}</p>
+        <p className='breu'><strong>Cargo capacity:</strong> {starship.cargo_capacity} kg</p>
+        <p className='breu'><strong>Consumables:</strong> {starship.consumables}</p>
+        <p className='breu'><strong>Starship class:</strong> {starship.starship_class}</p>
       </div>
 
       {/* Pilots */}
@@ -134,7 +132,7 @@ function StarshipsDetails() {
               </li>
             ))
           ) : (
-            <p>No pilots available</p>
+            <p className='breu'>No pilots available</p>
           )}
         </ul>
       )}

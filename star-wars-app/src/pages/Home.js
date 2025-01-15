@@ -71,13 +71,13 @@ function Home()
 
   return (
     <div className="home-container">
-      <h2>Welcome to the Star Wars Universe!</h2>
-      <p style={{ fontSize: '25px',}}>Here you will find all the information you need about the Star Wars universe, including the films, the characters, the planets, the starships, and the species! Explore the rich history of the galaxy far, far away, dive into each film's details, learn about iconic characters, and discover the diverse worlds and vehicles that make up this epic saga.</p>
-      <p style={{ fontSize: '40px',}}>Whether you're a long-time fan or new to the Star Wars universe, there's something here for everyone!</p> 
+      <h2  className='titol-h2'>Welcome to the Star Wars Universe!</h2>
+      <p  className='titol-p' style={{ fontSize: '25px',}}>Here you will find all the information you need about the Star Wars universe, including the films, the characters, the planets, the starships, and the species! Explore the rich history of the galaxy far, far away, dive into each film's details, learn about iconic characters, and discover the diverse worlds and vehicles that make up this epic saga.</p>
+      <p  className='titol-p'style={{ fontSize: '40px',}}>Whether you're a long-time fan or new to the Star Wars universe, there's something here for everyone!</p> 
 
       {/* Llista de pel·lícules ordenada per data de llançament */}
 <div className="films-list">
-  <h2>All Star Wars Films:</h2>
+  <h2 className='titol-h2'>All Star Wars Films:</h2>
   <div className="films-container">
     {films.length > 0 ? (
       films

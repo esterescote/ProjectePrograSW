@@ -107,14 +107,14 @@ function PlanetsDetails() {
       </button>
 
       <h2>{planet.name}</h2>
-      <p><strong>Diameter: </strong>{planet.diameter}</p>
-      <p><strong>Rotation period: </strong>{planet.rotation_period}</p>
-      <p><strong>Orbital period: </strong>{planet.orbital_period}</p>
-      <p><strong>Gravity: </strong>{planet.gravity}</p>
-      <p><strong>Population: </strong>{planet.population}</p>
-      <p><strong>Climate: </strong>{planet.climate}</p>
-      <p><strong>Terrain: </strong>{planet.terrain}</p>
-      <p><strong>Surface water: </strong>{planet.surface_water}</p>
+      <p className='breu'><strong>Diameter: </strong>{planet.diameter}</p>
+      <p className='breu'><strong>Rotation period: </strong>{planet.rotation_period}</p>
+      <p className='breu'><strong>Orbital period: </strong>{planet.orbital_period}</p>
+      <p className='breu'><strong>Gravity: </strong>{planet.gravity}</p>
+      <p className='breu'><strong>Population: </strong>{planet.population}</p>
+      <p className='breu'><strong>Climate: </strong>{planet.climate}</p>
+      <p className='breu'><strong>Terrain: </strong>{planet.terrain}</p>
+      <p className='breu'><strong>Surface water: </strong>{planet.surface_water}</p>
 
       {/* Residents */}
       <h3 className='desplegables' onClick={() => setShowResidents(!showResidents)}>
@@ -139,7 +139,7 @@ function PlanetsDetails() {
               </li>
             ))
           ) : (
-            <p>No residents available</p>
+            <p className='breu'>No residents available</p>
           )}
         </ul>
       )}
@@ -167,7 +167,7 @@ function PlanetsDetails() {
               </li>
             ))
           ) : (
-            <p>No films available</p>
+            <p className='breu'>No films available</p>
           )}
         </ul>
       )}

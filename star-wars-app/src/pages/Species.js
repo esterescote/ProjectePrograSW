@@ -87,38 +87,41 @@ function Species() {
                 <h3>{specie.name}</h3>
 
                 {/* Mostrar dos detalls per espècie */}
-                <p><strong>Classification:</strong> {specie.classification}</p>
-                <p><strong>Designation:</strong> {specie.designation}</p>
-
-                <button
-                  onClick={() => showDetails(specie)}
-                  style={{
-                    backgroundColor: 'gray',
-                    color: 'white',
-                    padding: '10px',
-                    margin: '10px',
-                    borderRadius: '5px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Show Details
-                </button>
-                <button
-                  onClick={() => toggleFavorite(specie)}
-                  style={{
-                    backgroundColor: favorites.some((fav) => fav.url === specie.url) ? 'red' : 'gray',
-                    color: 'white',
-                    padding: '10px',
-                    borderRadius: '5px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {favorites.some((fav) => fav.url === specie.url)
-                    ? 'Remove from Favorites'
-                    : 'Add to Favorites'}
-                </button>
+                <p className='breu'><strong>Classification:</strong> {specie.classification}</p>
+                <p className='breu'><strong>Designation:</strong> {specie.designation}</p>
+                <div className='button-DF'>
+                  <button
+                    onClick={() => showDetails(specie)}
+                    style={{
+                      backgroundColor: 'gray',
+                      color: 'white',
+                      padding: '10px',
+                      margin: '10px',
+                      borderRadius: '5px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Show Details
+                  </button>
+                  <button
+                    onClick={() => toggleFavorite(specie)}
+                    style={{
+                      backgroundColor: favorites.some((fav) => fav.url === specie.url) ? 'red' : 'gray',
+                      color: 'white',
+                      padding: '10px',
+                      margin: '10px',
+                      borderRadius: '5px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {favorites.some((fav) => fav.url === specie.url)
+                      ? 'Remove from Favorites'
+                      : 'Add to Favorites'}
+                  </button>
+                </div>
+                
               </li>
             ))}
           </ul>
@@ -132,10 +135,12 @@ function Species() {
                 style={{
                   margin: '5px',
                   padding: '10px',
-                  backgroundColor: page === currentPage ? 'blue' : 'gray',
+                  backgroundColor: page === currentPage ? '#FFCC00' : 'gray',
                   color: 'white',
                   borderRadius: '5px',
                   border: 'none',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   cursor: 'pointer',
                 }}
               >

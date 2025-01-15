@@ -108,41 +108,44 @@ function Characters() {
                     style={{ width: 'auto', height: '250px', marginBottom: '10px' }}
                   />
                 )}
-                <p><strong>Gender:</strong> {character.gender}</p>
-                <p><strong>Homeworld: </strong>{character.homeworld}</p>
-                <p><strong>Species: </strong>{character.species}</p>
-                <button
-                  onClick={() => showDetails(character)}
-                  style={{
-                    backgroundColor: 'gray',
-                    color: 'white',
-                    padding: '10px',
-                    margin: '10px',
-                    borderRadius: '5px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Show Details
-                </button>
-                <button
-                  onClick={() => toggleFavorite(character)}
-                  style={{
-                    backgroundColor: favorites.some((fav) => fav.url === character.url)
-                      ? 'red'
-                      : 'gray',
-                    color: 'white',
-                    padding: '10px',
-                    margin: '10px',
-                    borderRadius: '5px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {favorites.some((fav) => fav.url === character.url)
-                    ? 'Remove from Favorites'
-                    : 'Add to Favorites'}
-                </button>
+                <p className='breu'><strong>Gender:</strong> {character.gender}</p>
+                <p className='breu'><strong>Homeworld: </strong>{character.homeworld}</p>
+                <p className='breu'><strong>Species: </strong>{character.species}</p>
+                <div className='button-DF'>
+                  <button
+                    onClick={() => showDetails(character)}
+                    style={{
+                      backgroundColor: 'gray',
+                      color: 'white',
+                      padding: '10px',
+                      margin: '10px',
+                      borderRadius: '5px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Show Details
+                  </button>
+                  <button
+                    onClick={() => toggleFavorite(character)}
+                    style={{
+                      backgroundColor: favorites.some((fav) => fav.url === character.url)
+                        ? 'red'
+                        : 'gray',
+                      color: 'white',
+                      padding: '10px',
+                      margin: '10px',
+                      borderRadius: '5px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {favorites.some((fav) => fav.url === character.url)
+                      ? 'Remove from Favorites'
+                      : 'Add to Favorites'}
+                  </button>
+                </div>
+                
               </li>
             ))}
           </ul>
@@ -160,6 +163,8 @@ function Characters() {
                   color: 'white',
                   borderRadius: '5px',
                   border: 'none',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   cursor: 'pointer',
                 }}
               >

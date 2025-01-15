@@ -52,7 +52,7 @@ function Favorites() {
           ))}
         </ul>
       ) : (
-        <p>No favorites added yet!</p>
+        <p className='breu'>No favorites added yet!</p>
       )}
 
       {favorites.length > 0 && (

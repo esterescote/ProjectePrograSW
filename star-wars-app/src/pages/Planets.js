@@ -91,37 +91,36 @@ function Planets() {
                 <h3>{planet.name}</h3>
 
                 {/* Mostrar dos detalls per planeta */}
-                <p><strong>Climate:</strong> {planet.climate}</p>
-                <p><strong>Terrain:</strong> {planet.terrain}</p>
-
-                <button
-                  onClick={() => showDetails(planet)}
-                  style={{
-                    backgroundColor: 'gray',
-                    color: 'white',
-                    padding: '10px',
-                    margin: '10px',
-                    borderRadius: '5px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Show Details
-                </button>
-                <button
-                  onClick={() => toggleFavorite(planet)}
-                  style={{
-                    backgroundColor: favorites.some((fav) => fav.url === planet.url) ? 'red' : 'gray',
-                    color: 'white',
-                    padding: '10px',
-                    margin: '10px',
-                    borderRadius: '5px',
-                    border: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {favorites.some((fav) => fav.url === planet.url) ? 'Remove from Favorites' : 'Add to Favorites'}
-                </button>
+                <p className='breu'><strong>Climate:</strong> {planet.climate}</p>
+                <p className='breu'><strong>Terrain:</strong> {planet.terrain}</p>
+                <div className='button-DF'>
+                  <button
+                    onClick={() => showDetails(planet)}
+                    style={{
+                      backgroundColor: 'gray',
+                      color: 'white',
+                      padding: '10px',
+                      margin: '10px',
+                      borderRadius: '5px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >Show Details</button>
+                  <button
+                    onClick={() => toggleFavorite(planet)}
+                    style={{
+                      backgroundColor: favorites.some((fav) => fav.url === planet.url) ? 'red' : 'gray',
+                      color: 'white',
+                      padding: '10px',
+                      margin: '10px',
+                      borderRadius: '5px',
+                      border: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {favorites.some((fav) => fav.url === planet.url) ? 'Remove from Favorites' : 'Add to Favorites'}
+                  </button>
+                </div>
               </li>
             ))}
           </ul>
@@ -135,10 +134,12 @@ function Planets() {
                 style={{
                   margin: '5px',
                   padding: '10px',
-                  backgroundColor: page === currentPage ? 'blue' : 'gray',
+                  backgroundColor: page === currentPage ? '#FFCC00' : 'gray',
                   color: 'white',
                   borderRadius: '5px',
                   border: 'none',
+                  justifyContent: 'center',
+                  alignItems: 'center',
                   cursor: 'pointer',
                 }}
               >

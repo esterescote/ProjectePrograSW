@@ -108,7 +108,7 @@ function FilmDetails() {
   }, [title]);
 
   if (!film) {
-    return <p>No film details available.</p>;
+    return <p  className='breu'>No film details available.</p>;
   }
 
   return (
@@ -156,11 +156,11 @@ function FilmDetails() {
       )}
 
       {/* Mostrar més informació de la pel·lícula */}
-      <p><strong>Episode: </strong>{film.episode_id}</p>
-      <p><strong>Director: </strong>{film.director}</p>
-      <p><strong>Producer: </strong>{film.producer}</p>
-      <p><strong>Release Date: </strong>{film.release_date}</p>
-      <p><strong>Opening: </strong>{film.opening_crawl}</p>
+      <p className='breu'><strong>Episode: </strong>{film.episode_id}</p>
+      <p className='breu'><strong>Director: </strong>{film.director}</p>
+      <p className='breu'><strong>Producer: </strong>{film.producer}</p>
+      <p className='breu'><strong>Release Date: </strong>{film.release_date}</p>
+      <p className='breu'><strong>Opening: </strong>{film.opening_crawl}</p>
 
       {/* Mostrar títol i subcategoria amb alternança */}
       <h3 className="desplegables" onClick={() => setShowCharacters(!showCharacters)} style={{ cursor: 'pointer' }}>

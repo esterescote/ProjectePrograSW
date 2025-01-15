@@ -68,7 +68,7 @@ function Films() {
     <div>
       <h2>FILMS</h2>
       {loading ? (
-        <p>Loading films...</p>
+        <p className='breu'>Loading films...</p>
       ) : (
         <ul className="display-elements">
           {films.map((film) => (
@@ -81,40 +81,43 @@ function Films() {
                   style={{ width: '200px', height: 'auto', marginBottom: '10px' }}
                 />
               )}
-              <p><strong>Episode: </strong>{film.episode_id}</p>
-              <p><strong>Director: </strong>{film.director}</p>
-              <button
-                onClick={() => handleShowDetails(film)}
-                style={{
-                  backgroundColor: 'gray',
-                  color: 'white',
-                  padding: '10px',
-                  margin: '10px',
-                  borderRadius: '5px',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                Show Details
-              </button>
-              <button
-                onClick={() => toggleFavorite(film)}
-                style={{
-                  backgroundColor: favorites.some((fav) => fav.url === film.url)
-                    ? 'red'
-                    : 'gray',
-                  color: 'white',
-                  padding: '10px',
-                  margin: '10px',
-                  borderRadius: '5px',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                {favorites.some((fav) => fav.url === film.url)
-                  ? 'Remove from Favorites'
-                  : 'Add to Favorites'}
-              </button>
+              <p className='breu'><strong>Episode: </strong>{film.episode_id}</p>
+              <p className='breu'><strong>Director: </strong>{film.director}</p>
+              <div className='button-DF'>
+                <button
+                  onClick={() => handleShowDetails(film)}
+                  style={{
+                    backgroundColor: 'gray',
+                    color: 'white',
+                    padding: '10px',
+                    margin: '10px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Show Details
+                </button>
+                <button
+                  onClick={() => toggleFavorite(film)}
+                  style={{
+                    backgroundColor: favorites.some((fav) => fav.url === film.url)
+                      ? 'red'
+                      : 'gray',
+                    color: 'white',
+                    padding: '10px',
+                    margin: '10px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {favorites.some((fav) => fav.url === film.url)
+                    ? 'Remove from Favorites'
+                    : 'Add to Favorites'}
+                </button>
+              </div>
+              
             </li>
           ))}
         </ul>
