@@ -7,10 +7,10 @@ header {
 
 .header-container {
   display: flex;
-  align-items: center; /* Alinea verticalment els elements al centre */
-  justify-content: flex-start; /* Col·loca els elements a l'esquerra */
-  gap: 20px; /* Espai entre els elements */
-  padding: 0 20px; /* Afegir espai a la dreta i l'esquerra */
+  align-items: center;
+  justify-content: flex-start; 
+  gap: 20px; 
+  padding: 0 20px;
 }
 
 .header-container h1 
@@ -21,7 +21,7 @@ header {
   text-align: center;
 }
 
-/* Estils del menú */
+/* Menu style */
 .search-container 
 {
   position: relative;
@@ -35,7 +35,7 @@ header {
 
 .search-input 
 {
-  padding: 10px 40px 10px 40px; /* Afegim més espai a l'esquerra per la icona */
+  padding: 10px 40px 10px 40px;
   font-size: 1.1rem;
   border-radius: 25px;
   border: 2px solid #ddd;
@@ -65,8 +65,8 @@ header {
 .menu ul 
 {
   display: grid;
-  grid-template-columns: repeat(6, 1fr); /* Inicialment, 6 elements en una fila */
-  gap: 15px; /* Espai entre els elements del menú */
+  grid-template-columns: repeat(6, 1fr);
+  gap: 15px;
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -124,8 +124,8 @@ header {
   font-weight: bold;
   transition: all 0.3s ease;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  margin-top: 20px;  /* Afegir espai a sobre del botó */
-  margin-bottom: 20px;  /* Afegir espai a sota del botó */
+  margin-top: 20px; 
+  margin-bottom: 20px; 
 }
 
 .menu-toggle:hover 
@@ -193,7 +193,7 @@ header {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 20px; /* Espai entre els botons */
+  gap: 20px; 
   margin-top: 30px;
 }
 
@@ -201,15 +201,15 @@ header {
 {
   background-color: #333;
   color: white;
-  padding: 20px 40px; /* Augmentem el padding per fer els botons més grans */
-  font-size: 1.5rem; /* Augmentem la mida de la font */
+  padding: 20px 40px;
+  font-size: 1.5rem;
   text-align: center;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
-  width: 250px; /* Assignem una amplada fixa per a tots els botons */
-  min-width: 250px; /* Assegurem-nos que tots els botons tinguin la mateixa amplada */
+  width: 250px; 
+  min-width: 250px;
 }
 
 .category-button:hover 
@@ -228,7 +228,6 @@ header {
   text-decoration: none;
 }
 
-/* Estil per al botó de filtres */
 .filter-button 
 {
   background-color: #444;
@@ -248,14 +247,13 @@ header {
   background-color: #555;
 }
 
-/* Estil per al menú de filtres desplegable */
 .filters-dropdown 
 {
   margin-top: 30px;
   background-color: #444;
   padding: 15px;
   border-radius: 5px;
-  top: 60px; /* Ajusta aquesta alçada si és necessari */
+  top: 60px; 
   right: 10px;
   z-index: 10;
 }
@@ -269,8 +267,6 @@ header {
   margin-bottom: 10px;
 }
 
-
-/* Estil per a l'etiqueta de la selecció de categoria i la casella de selecció */
 label {
   font-size: 1.1rem;
   color: #f1f1f1;
@@ -279,7 +275,6 @@ label {
   margin-bottom: 10px;
 }
 
-/* Estil per al selector (select) */
 select {
   width: 200px;
   padding: 8px;
@@ -298,7 +293,6 @@ select:focus {
   box-shadow: 0 0 5px #ffcc00;
 }
 
-/* Estil per a les opcions dins del selector */
 select option {
   background-color: #444;
   color: #f1f1f1;
@@ -313,7 +307,6 @@ select option:hover {
   background-color: #666;
 }
 
-/* Estil per a la casella de selecció (checkbox) */
 input[type="checkbox"] {
   width: 20px;
   height: 20px;
@@ -336,17 +329,15 @@ input[type="checkbox"]:focus {
   box-shadow: 0 0 5px #ffcc00;
 }
 
-/* Estil per a la casella de selecció quan el cursor està sobre ella */
 input[type="checkbox"]:hover {
   transform: scale(1.1);
 }
 
-/* Ajustem el menú de navegació */
 nav ul 
 {
   display: flex;
   justify-content: center;
-  gap: 30px; /* Més espai entre els elements */
+  gap: 30px; 
   list-style-type: none;
   padding: 0;
   margin: 0;
@@ -365,7 +356,7 @@ nav ul li a
 nav ul li a:hover 
 {
   background-color: #555;
-  transform: translateY(-3px); /* Petita animació al passar-hi */
+  transform: translateY(-3px); 
 }
 
 body 
@@ -390,9 +381,9 @@ body
   object-fit: cover;
   margin-right: 20px;
   cursor: pointer;
-  border: 3px solid transparent; /* Borde inicial transparent */
-  border-radius: 50%; /* Rodonim la imatge */
-  transition: border-color 0.3s ease, transform 0.3s ease; /* Animació suau */
+  border: 3px solid transparent; 
+  border-radius: 50%;
+  transition: border-color 0.3s ease, transform 0.3s ease; 
 }
 .search-icon 
 {
@@ -402,27 +393,28 @@ body
   margin-right: 20px;
 }
 
-/* Canvi de color del borde en passar-hi el ratolí */
+/* Border color change on hover */
 .home-icon:hover 
 {
-  border-color: #ffcc00; /* Color del borde quan el ratolí passa per sobre */
-  transform: scale(1.1); /* L'efecte fa que la imatge creixi lleugerament */
+  border-color: #ffcc00; /* Border color when the mouse hovers over */
+  transform: scale(1.1); /* The effect makes the image grow slightly */
 }
 
 .display-elements {
   display: flex;
-  flex-wrap: wrap; /* Permet que els elements passin a la següent línia */
-  gap: 10px; /* Espai entre els elements */
-  justify-content: center; /* Centra els elements horitzontalment */
-  align-items: center; /* Centra els elements verticalment (si és necessari) */
-  width: 100%; /* Assegura que el contenidor ocupi tot l'amplada disponible */
+  flex-wrap: wrap; /* Allows elements to wrap to the next line */
+  gap: 10px; /* Space between the elements */
+  justify-content: center; /* Centers elements horizontally */
+  align-items: center; /* Centers elements vertically (if needed) */
+  width: 100%; /* Ensures the container takes up the full available width */
 }
 .films-container {
   display: flex;
-  flex-wrap: wrap; /* Això permet que les pel·lícules es moguin a la següent línia quan no hi hagi espai */
-  gap: 20px; /* Espai entre les pel·lícules */
-  justify-content: center; /* Centra les pel·lícules horitzontalment */
+  flex-wrap: wrap; /* This allows films to move to the next line when there is no space */
+  gap: 20px; /* Space between the films */
+  justify-content: center; /* Centers the films horizontally */
 }
+
 .film-card {
   background-color: #333;
   color: white;
@@ -626,7 +618,7 @@ font-weight: bold;
 margin-top: 30px;
 }
 
-/* Contenidor principal */
+/* Main container */
 .character-details-container {
   color: #ffd700;
   padding: 20px;
@@ -634,7 +626,7 @@ margin-top: 30px;
   margin: 20px auto;
 }
 
-/* Botons */
+/* Button */
 .header-buttons {
   display: flex;
   justify-content: space-between;
@@ -660,14 +652,14 @@ margin-top: 30px;
   background-color: red;
 }
 
-/* Contingut del personatge */
+/* Character content */
 .character-content {
   display: flex;
   gap: 20px;
   align-items: flex-start;
 }
 
-/* Imatge del personatge */
+/* Character img */
 .character-image img {
   width: auto;
   height: 350px;
@@ -675,7 +667,7 @@ margin-top: 30px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
 }
 
-/* Detalls */
+/* Details */
 .character-details {
   background-color: #333333;
   padding: 15px;
@@ -687,7 +679,7 @@ margin-top: 30px;
   color: white;
 }
 
-/* Secció de pel·lícules */
+/* Film section */
 .character-films {
   margin-top: 20px;
   color: white;
@@ -747,7 +739,7 @@ h3
 
   .menu ul 
   {
-    grid-template-columns: repeat(3, 1fr); /* 3 elements per fila per pantalles mitjanes */
+    grid-template-columns: repeat(3, 1fr); 
   }
 
   .container 
@@ -783,12 +775,12 @@ h3
 
   .button-container 
   {
-      grid-template-columns: repeat(2, 1fr);  /* 2 columnes */
+      grid-template-columns: repeat(2, 1fr);  
   }
 
   nav ul 
   {
-      grid-template-columns: repeat(2, 1fr);  /* 2 columnes en mòbils */
+      grid-template-columns: repeat(2, 1fr); 
   }
 
   .favorites-container 

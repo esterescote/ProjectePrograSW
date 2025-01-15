@@ -3,35 +3,44 @@ import { Link, useLocation } from "react-router-dom";
 import { FavoritesContext } from "../context/FavoritesContext";
 import "../styles.css";
 
+// Main Goal: The Menu component handles displaying a navigation menu, a search bar, and a filterable list of items fetched from various SWAPI endpoints.
+// Structure: The component includes navigation links, a search input, filter options (category and favorites), and a grid of results.
+// Relation: It interacts with the FavoritesContext to display only favorite items and uses the useLocation hook to clear search on page change.
+
 function Menu() {
+  // State for controlling search input, result display, category filter, favorites filter, and dropdown visibility
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
-  const [categoryFilter, setCategoryFilter] = useState(""); // Filtre de categoria
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false); // Filtre per favorits
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // Estat del desplegable
-  const location = useLocation();
-  const { favorites } = useContext(FavoritesContext); // Per saber quins són els elements favorits
+  const [categoryFilter, setCategoryFilter] = useState(""); // Filter by category (e.g., films, characters)
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false); // Show only favorite items if true
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown visibility
+  const location = useLocation(); // Hook to get current location (used for resetting search term)
+  
+  // Access favorites from the FavoritesContext to filter favorite items
+  const { favorites } = useContext(FavoritesContext);
 
-  // Càrrega inicial de dades
+  // Effect for fetching data from multiple SWAPI endpoints on component mount
   useEffect(() => {
+    // Helper function to fetch paginated results from an endpoint
     const fetchAllPages = async (endpoint) => {
       let allResults = [];
       let nextPage = endpoint;
-  
+
       try {
         while (nextPage) {
-          const response = await fetch(nextPage);
+          const response = await fetch(nextPage); // Fetch current page
           const data = await response.json();
-          allResults = [...allResults, ...data.results];
-          nextPage = data.next; // SWAPI indica la URL de la següent pàgina o null
+          allResults = [...allResults, ...data.results]; // Append fetched results to allResults
+          nextPage = data.next; // Set nextPage to the URL of the next page (or null if there is no more data)
         }
       } catch (error) {
-        console.error(`Error fetching data from ${endpoint}:`, error);
+        console.error(`Error fetching data from ${endpoint}:`, error); // Log errors if the fetch fails
       }
-  
-      return allResults;
+
+      return allResults; // Return the collected results
     };
-  
+
+    // Fetch data from all SWAPI endpoints
     const fetchData = async () => {
       try {
         const endpoints = [
@@ -41,13 +50,13 @@ function Menu() {
           "https://swapi.py4e.com/api/species/",
           "https://swapi.py4e.com/api/starships/",
         ];
-  
-        // Esperem totes les peticions de manera paral·lela
+
+        // Fetch data from all endpoints in parallel
         const data = await Promise.all(
           endpoints.map((endpoint) => fetchAllPages(endpoint))
         );
-  
-        // Combina els resultats de totes les categories amb la categoria assignada
+
+        // Combine results from all categories with an additional 'category' field to distinguish them
         const combinedResults = [
           ...data[0].map((item) => ({ ...item, category: "films" })),
           ...data[1].map((item) => ({ ...item, category: "characters" })),
@@ -55,36 +64,35 @@ function Menu() {
           ...data[3].map((item) => ({ ...item, category: "species" })),
           ...data[4].map((item) => ({ ...item, category: "starships" })),
         ];
-  
-        setResults(combinedResults);
+
+        setResults(combinedResults); // Set combined results to state
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error); // Log errors if fetching fails
       }
     };
-  
-    fetchData();
-  }, []);
-  
 
-  // Efecte de neteja de la cerca quan canviem de pàgina
+    fetchData(); // Trigger the data fetching on component mount
+  }, []); // Empty dependency array means this effect runs once when the component mounts
+
+  // Effect for clearing the search term when the page changes (triggered by location change)
   useEffect(() => {
-    setSearchTerm("");
+    setSearchTerm(""); // Reset search term when navigating to a new page
   }, [location]);
 
-  // Filtrar resultats
+  // Filtering results based on the selected filters (search term, category, and favorites)
   const filteredResults = results
     .filter((item) => {
-      // Filtrar per categoria si s'ha seleccionat alguna
+      // Filter by selected category
       if (categoryFilter && item.category !== categoryFilter) {
         return false;
       }
 
-      // Filtrar per favorits si l'usuari ho ha marcat
+      // Filter by favorites if "Show Only Favorites" is enabled
       if (showFavoritesOnly && !favorites.some((fav) => fav.url === item.url)) {
         return false;
       }
 
-      // Filtrar per terme de cerca
+      // Filter by search term, matching either name or title (case-insensitive)
       if (
         searchTerm &&
         !(
@@ -95,44 +103,44 @@ function Menu() {
         return false;
       }
 
-      return true;
+      return true; // Include item if it passes all filters
     })
-    .map((item) => item);
-    
-  // Extracció d'id de la URL
+    .map((item) => item); // Return the filtered results
+
+  // Helper function to extract the ID from a URL (used to generate the link for each item)
   const extractIdFromUrl = (url) => {
-    const parts = url.split("/").filter(Boolean);
-    return parts[parts.length - 1];
+    const parts = url.split("/").filter(Boolean); // Split URL by slashes and filter out empty strings
+    return parts[parts.length - 1]; // Return the last part (the ID)
   };
 
-  // Generar ruta per cada element
+  // Function to generate the correct link path based on the category and ID or name of the item
   const getLinkPath = (result) => {
     const idOrName = encodeURIComponent(result.name || result.title || extractIdFromUrl(result.url));
-    switch (result.category) 
-    {
+    switch (result.category) {
       case "films":
-        return `/films/${idOrName}`;
+        return `/films/${idOrName}`; // Film route
       case "characters":
-        return `/characters/${idOrName}`;
+        return `/characters/${idOrName}`; // Character route
       case "planets":
-        return `/planets/${idOrName}`;
+        return `/planets/${idOrName}`; // Planet route
       case "species":
-        return `/species/${idOrName}`;
+        return `/species/${idOrName}`; // Species route
       case "starships":
-        return `/starships/${idOrName}`;
+        return `/starships/${idOrName}`; // Starship route
       default:
-        return "/";
+        return "/"; // Default route (fallback)
     }
   };
 
-  // Funció per alternar l'estat del desplegable
+  // Function to toggle the visibility of the filter dropdown
   const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    setIsDropdownOpen(!isDropdownOpen); // Toggle dropdown state
   };
 
   return (
     <header className="header">
       <nav className="menu">
+        {/* Navigation links for different categories */}
         <ul>
           <li><Link to="/films">Films</Link></li>
           <li><Link to="/characters">Characters</Link></li>
@@ -144,29 +152,30 @@ function Menu() {
       </nav>
 
       <div className="search-container">
-        {/* Input de cerca */}
+        {/* Search input to filter results */}
         <input
           type="text"
           placeholder="Search..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)} // Update searchTerm state
           className="search-input styled-search"
         />
 
-        {/* Botó per obrir/tancar el desplegable */}
+        {/* Button to toggle the filter dropdown */}
         <button className="filter-button" onClick={toggleDropdown}>
           Filters
         </button>
 
-        {/* Menú de filtres desplegable */}
+        {/* Filter dropdown, shown if isDropdownOpen is true */}
         {isDropdownOpen && (
           <div className="filters-dropdown">
             <div className="filters">
+              {/* Category filter dropdown */}
               <label>
                 Category:
                 <select
                   value={categoryFilter}
-                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  onChange={(e) => setCategoryFilter(e.target.value)} // Update categoryFilter state
                 >
                   <option value="">All Categories</option>
                   <option value="films">Films</option>
@@ -177,34 +186,35 @@ function Menu() {
                 </select>
               </label>
 
+              {/* Show Only Favorites checkbox */}
               <label>
                 Show Only Favorites:
                 <input
                   type="checkbox"
                   checked={showFavoritesOnly}
-                  onChange={(e) => setShowFavoritesOnly(e.target.checked)}
+                  onChange={(e) => setShowFavoritesOnly(e.target.checked)} // Update showFavoritesOnly state
                 />
               </label>
             </div>
           </div>
         )}
 
-        {/* Resultats de la cerca */}
+        {/* Display the filtered search results */}
         {searchTerm && (
-        <div className="results-grid">
-          {filteredResults.map((result) => (
-            <Link 
-              to={getLinkPath(result)} 
-              key={result.url} 
-              className="result-card"
-              onClick={() => console.log("Element clicat:", result)} // Aquí s'afegeix el console.log
-            >
-              <h3>{result.name || result.title}</h3>
-              <p><strong>Category:</strong> {result.category}</p>
-            </Link>
-          ))}
-        </div>
-      )}
+          <div className="results-grid">
+            {filteredResults.map((result) => (
+              <Link 
+                to={getLinkPath(result)} 
+                key={result.url} 
+                className="result-card"
+                onClick={() => console.log("Element clicked:", result)} // Log clicked item for debugging
+              >
+                <h3>{result.name || result.title}</h3>
+                <p><strong>Category:</strong> {result.category}</p>
+              </Link>
+            ))}
+          </div>
+        )}
       </div>
     </header>
   );
