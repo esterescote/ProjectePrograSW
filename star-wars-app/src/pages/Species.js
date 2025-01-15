@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 function Species() {
   const [species, setSpecies] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1); // Pàgina actual
+  const itemsPerPage = 10; // Nombre d'elements per pàgina (10 espècies)
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const navigate = useNavigate();
 
@@ -53,6 +55,20 @@ function Species() {
     fetchAllSpecies(); // Carregar totes les espècies quan es renderitza el component
   }, []);
 
+  // Calcular quines espècies es mostren a la pàgina actual
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentSpecies = species.slice(startIndex, endIndex);
+
+  // Funció per canviar de pàgina
+  const changePage = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Generar botons de paginació
+  const totalPages = Math.ceil(species.length / itemsPerPage);
+  const paginationButtons = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   // Funció per mostrar els detalls de l'espècie
   const showDetails = (specie) => {
     navigate(`/species/${specie.name}`, { state: { specieName: specie.name } })
@@ -61,11 +77,12 @@ function Species() {
   return (
     <div>
       <h2>SPECIES</h2>
-      {loading ? (<p>Loading species...</p>) : (
-        <ul className='display-elements'>
-          {
-            species.map((specie) => 
-            (
+      {loading ? (
+        <p>Loading species...</p>
+      ) : (
+        <>
+          <ul className="display-elements">
+            {currentSpecies.map((specie) => (
               <li key={specie.url}>
                 <h3>{specie.name}</h3>
 
@@ -90,9 +107,7 @@ function Species() {
                 <button
                   onClick={() => toggleFavorite(specie)}
                   style={{
-                    backgroundColor: favorites.some((fav) => fav.url === specie.url)
-                      ? 'red'
-                      : 'gray',
+                    backgroundColor: favorites.some((fav) => fav.url === specie.url) ? 'red' : 'gray',
                     color: 'white',
                     padding: '10px',
                     borderRadius: '5px',
@@ -105,9 +120,30 @@ function Species() {
                     : 'Add to Favorites'}
                 </button>
               </li>
-            ))
-          }
-        </ul>
+            ))}
+          </ul>
+
+          {/* Botons de paginació */}
+          <div className="pagination">
+            {paginationButtons.map((page) => (
+              <button
+                key={page}
+                onClick={() => changePage(page)}
+                style={{
+                  margin: '5px',
+                  padding: '10px',
+                  backgroundColor: page === currentPage ? 'blue' : 'gray',
+                  color: 'white',
+                  borderRadius: '5px',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
+              >
+                {page}
+              </button>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

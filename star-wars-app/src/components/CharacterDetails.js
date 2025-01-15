@@ -105,7 +105,6 @@ function CharacterDetails() {
       >
         Back
       </button>
-
       <button
         onClick={() => toggleFavorite(character)}
         style={{
@@ -123,45 +122,54 @@ function CharacterDetails() {
           : 'Add to Favorites'}
       </button>
 
-      <h2>{character.name}</h2>
-      {character.image && (
-        <img
-          src={character.image}
-          alt={character.name}
-          style={{ width: '200px', height: 'auto', marginBottom: '20px' }}
-        />
-      )}
-      <p>Height: {character.height} cm</p>
-      <p>Mass: {character.mass} kg</p>
-      <p>Hair color: {character.hair_color}</p>
-      <p>Skin color: {character.skin_color}</p>
-      <p>Eye color: {character.eye_color}</p>
-      <p>Birth year: {character.birth_year}</p>
-      <p>Gender: {character.gender}</p>
-      <p>Homeworld: {character.homeworld}</p>
-      <p>Species: {character.species}</p>
+        <h2>{character.name}</h2>
+      <div className='details-container'>
 
-      {/* Secció Films */}
-      <h3 className="desplegables"
-        onClick={() => setShowFilms(!showFilms)} // Alternem entre mostrar/ocultar
-      >
-        Films
-      </h3>
-      {showFilms && (
-        <ul className={`display-elements ${showFilms ? 'show' : ''}`}>
-          {filmTitles.map((film, index) => (
-            <li
-              key={index}
-              onClick={() =>
-                navigate(`/films/${film.title}`, { state: { film: film.details } })
-              }
-              style={{ cursor: 'pointer' }}
-            >
-              {film.title}
-            </li>
-          ))}
-        </ul>
-      )}
+        <div className='details-img'>
+            {character.image && (
+            <img
+              src={character.image}
+              alt={character.name}
+              style={{ width: '200px', height: 'auto', marginBottom: '20px' }}
+            />
+            )}
+        </div>
+
+        <div className='details-content'>
+          <p><strong>Height: </strong>{character.height} cm</p>
+          <p><strong>Mass: </strong>{character.mass} kg</p>
+          <p><strong>Hair color: </strong>{character.hair_color}</p>
+          <p><strong>Skin color: </strong>{character.skin_color}</p>
+          <p><strong>Eye color: </strong>{character.eye_color}</p>
+          <p><strong>Birth year: </strong>{character.birth_year}</p>
+          <p><strong>Gender: </strong>{character.gender}</p>
+          <p><strong>Homeworld: </strong>{character.homeworld}</p>
+          <p><strong>Species: </strong>{character.species}</p>
+        </div>
+        </div>
+        <div className='related-content'>
+          {/* Secció Films */}
+          <h3 className="desplegables"
+            onClick={() => setShowFilms(!showFilms)} // Alternem entre mostrar/ocultar
+          >
+            Films
+          </h3>
+          {showFilms && (
+            <ul className={`display-elements ${showFilms ? 'show' : ''}`}>
+              {filmTitles.map((film, index) => (
+                <li
+                  key={index}
+                  onClick={() =>
+                    navigate(`/films/${film.title}`, { state: { film: film.details } })
+                  }
+                  style={{ cursor: 'pointer' }}
+                >
+                  {film.title}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
     </div>
   );
 }

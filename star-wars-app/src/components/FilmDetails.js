@@ -156,11 +156,11 @@ function FilmDetails() {
       )}
 
       {/* Mostrar més informació de la pel·lícula */}
-      <p>Episode: {film.episode_id}</p>
-      <p>Director: {film.director}</p>
-      <p>Producer: {film.producer}</p>
-      <p>Release Date: {film.release_date}</p>
-      <p>Opening: {film.opening_crawl}</p>
+      <p><strong>Episode: </strong>{film.episode_id}</p>
+      <p><strong>Director: </strong>{film.director}</p>
+      <p><strong>Producer: </strong>{film.producer}</p>
+      <p><strong>Release Date: </strong>{film.release_date}</p>
+      <p><strong>Opening: </strong>{film.opening_crawl}</p>
 
       {/* Mostrar títol i subcategoria amb alternança */}
       <h3 className="desplegables" onClick={() => setShowCharacters(!showCharacters)} style={{ cursor: 'pointer' }}>

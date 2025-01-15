@@ -14,6 +14,24 @@ function Menu() {
 
   // Càrrega inicial de dades
   useEffect(() => {
+    const fetchAllPages = async (endpoint) => {
+      let allResults = [];
+      let nextPage = endpoint;
+  
+      try {
+        while (nextPage) {
+          const response = await fetch(nextPage);
+          const data = await response.json();
+          allResults = [...allResults, ...data.results];
+          nextPage = data.next; // SWAPI indica la URL de la següent pàgina o null
+        }
+      } catch (error) {
+        console.error(`Error fetching data from ${endpoint}:`, error);
+      }
+  
+      return allResults;
+    };
+  
     const fetchData = async () => {
       try {
         const endpoints = [
@@ -23,27 +41,30 @@ function Menu() {
           "https://swapi.py4e.com/api/species/",
           "https://swapi.py4e.com/api/starships/",
         ];
-
+  
+        // Esperem totes les peticions de manera paral·lela
         const data = await Promise.all(
-          endpoints.map((endpoint) => fetch(endpoint).then((res) => res.json()))
+          endpoints.map((endpoint) => fetchAllPages(endpoint))
         );
-
+  
+        // Combina els resultats de totes les categories amb la categoria assignada
         const combinedResults = [
-          ...data[0].results.map((item) => ({ ...item, category: "films" })),
-          ...data[1].results.map((item) => ({ ...item, category: "characters" })),
-          ...data[2].results.map((item) => ({ ...item, category: "planets" })),
-          ...data[3].results.map((item) => ({ ...item, category: "species" })),
-          ...data[4].results.map((item) => ({ ...item, category: "starships" })),
+          ...data[0].map((item) => ({ ...item, category: "films" })),
+          ...data[1].map((item) => ({ ...item, category: "characters" })),
+          ...data[2].map((item) => ({ ...item, category: "planets" })),
+          ...data[3].map((item) => ({ ...item, category: "species" })),
+          ...data[4].map((item) => ({ ...item, category: "starships" })),
         ];
-
+  
         setResults(combinedResults);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
+  
     fetchData();
   }, []);
+  
 
   // Efecte de neteja de la cerca quan canviem de pàgina
   useEffect(() => {

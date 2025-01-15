@@ -66,7 +66,7 @@ function Home()
   }, []);
 
   const handleShowDetails = (film) => {
-    navigate(`/films/${film.episode_id}`, { state: { film } });
+    navigate(`/films/${film.title}`, { state: { film } });
   };
 
   return (

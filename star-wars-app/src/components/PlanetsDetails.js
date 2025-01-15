@@ -107,14 +107,14 @@ function PlanetsDetails() {
       </button>
 
       <h2>{planet.name}</h2>
-      <p>Diameter: {planet.diameter}</p>
-      <p>Rotation period: {planet.rotation_period}</p>
-      <p>Orbital period: {planet.orbital_period}</p>
-      <p>Gravity: {planet.gravity}</p>
-      <p>Population: {planet.population}</p>
-      <p>Climate: {planet.climate}</p>
-      <p>Terrain: {planet.terrain}</p>
-      <p>Surface water: {planet.surface_water}</p>
+      <p><strong>Diameter: </strong>{planet.diameter}</p>
+      <p><strong>Rotation period: </strong>{planet.rotation_period}</p>
+      <p><strong>Orbital period: </strong>{planet.orbital_period}</p>
+      <p><strong>Gravity: </strong>{planet.gravity}</p>
+      <p><strong>Population: </strong>{planet.population}</p>
+      <p><strong>Climate: </strong>{planet.climate}</p>
+      <p><strong>Terrain: </strong>{planet.terrain}</p>
+      <p><strong>Surface water: </strong>{planet.surface_water}</p>
 
       {/* Residents */}
       <h3 className='desplegables' onClick={() => setShowResidents(!showResidents)}>

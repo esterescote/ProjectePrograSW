@@ -61,7 +61,7 @@ function Films() {
   }, []);
 
   const handleShowDetails = (film) => {
-    navigate(`/films/${film.episode_id}`, { state: { film } });
+    navigate(`/films/${film.title}`, { state: { film } });
   };
 
   return (
@@ -81,8 +81,8 @@ function Films() {
                   style={{ width: '200px', height: 'auto', marginBottom: '10px' }}
                 />
               )}
-              <p>Episode: {film.episode_id}</p>
-              <p>Director: {film.director}</p>
+              <p><strong>Episode: </strong>{film.episode_id}</p>
+              <p><strong>Director: </strong>{film.director}</p>
               <button
                 onClick={() => handleShowDetails(film)}
                 style={{

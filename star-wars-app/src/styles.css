@@ -418,6 +418,12 @@ body
   width: 100%; /* Assegura que el contenidor ocupi tot l'amplada disponible */
 }
 
+/* Efecte per als botons deshabilitats */
+.pagination button:disabled {
+  background-color: lightgray; /* Color més clar quan el botó està deshabilitat */
+  cursor: not-allowed; /* El cursor indica que no es pot fer clic */
+}
+
 .films-container {
   display: flex;
   flex-wrap: wrap; /* Això permet que les pel·lícules es moguin a la següent línia quan no hi hagi espai */
@@ -613,6 +619,36 @@ color: #f1f1f1;
 font-weight: bold;
 margin-top: 30px;
 }
+
+.details-container {
+  display: flex;
+  flex-direction: row; /* Col·loca els elements en fila */
+  align-items: center; /* Alinea verticalment els elements al centre */
+  gap: 20px; /* Afegeix un espai entre els elements */
+}
+
+/* Element de la imatge */
+.details-img {
+  display: flex; /* Utilitza Flexbox al contenidor de la imatge */
+  justify-content: center; /* Centra horitzontalment */
+  align-items: center; /* Centra verticalment */
+  width: 200px;
+  height: auto; /* O defineix una alçada fixa si vols */
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Contingut textual o informació */
+.details-content {
+  flex: 1; /* Fes que ocupi l'espai restant, si cal */
+  padding: 10px;
+}
+/*.related-content
+{
+
+}*/
+
+
 
 /* Responsive */
 @media (max-width: 768px) 

@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 function Planets() {
   const [planets, setPlanets] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1); // Pàgina actual
+  const itemsPerPage = 10; // Nombre d'elements per pàgina (10 planetes)
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
   const navigate = useNavigate();
 
@@ -57,10 +59,23 @@ function Planets() {
     fetchAllPlanets(); // Carregar planetes en muntatge
   }, []);
 
+  // Calcular quins planetes es mostren a la pàgina actual
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentPlanets = planets.slice(startIndex, endIndex);
+
+  // Funció per canviar de pàgina
+  const changePage = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Generar botons de paginació
+  const totalPages = Math.ceil(planets.length / itemsPerPage);
+  const paginationButtons = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   // Funció per mostrar els detalls del planeta
-  const showDetails = (planet) => 
-  {
-    navigate(`/planets/${planet.name}`, { state: { planetName: planet.name } })
+  const showDetails = (planet) => {
+    navigate(`/planets/${planet.name}`, { state: { planetName: planet.name } });
   };
 
   return (
@@ -69,46 +84,69 @@ function Planets() {
       {loading ? (
         <p>Loading planets...</p>
       ) : (
-        <ul className="display-elements">
-          {planets.map((planet) => (
-            <li key={planet.url}>
-              <h3>{planet.name}</h3>
+        <>
+          <ul className="display-elements">
+            {currentPlanets.map((planet) => (
+              <li key={planet.url}>
+                <h3>{planet.name}</h3>
 
-              {/* Mostrar dos detalls per planeta */}
-              <p><strong>Climate:</strong> {planet.climate}</p>
-              <p><strong>Terrain:</strong> {planet.terrain}</p>
+                {/* Mostrar dos detalls per planeta */}
+                <p><strong>Climate:</strong> {planet.climate}</p>
+                <p><strong>Terrain:</strong> {planet.terrain}</p>
 
+                <button
+                  onClick={() => showDetails(planet)}
+                  style={{
+                    backgroundColor: 'gray',
+                    color: 'white',
+                    padding: '10px',
+                    margin: '10px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Show Details
+                </button>
+                <button
+                  onClick={() => toggleFavorite(planet)}
+                  style={{
+                    backgroundColor: favorites.some((fav) => fav.url === planet.url) ? 'red' : 'gray',
+                    color: 'white',
+                    padding: '10px',
+                    margin: '10px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {favorites.some((fav) => fav.url === planet.url) ? 'Remove from Favorites' : 'Add to Favorites'}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          {/* Botons de paginació */}
+          <div className="pagination">
+            {paginationButtons.map((page) => (
               <button
-                onClick={() => showDetails(planet)}
+                key={page}
+                onClick={() => changePage(page)}
                 style={{
-                  backgroundColor: 'gray',
-                  color: 'white',
+                  margin: '5px',
                   padding: '10px',
-                  margin: '10px',
+                  backgroundColor: page === currentPage ? 'blue' : 'gray',
+                  color: 'white',
                   borderRadius: '5px',
                   border: 'none',
                   cursor: 'pointer',
                 }}
               >
-                Show Details
+                {page}
               </button>
-              <button
-                onClick={() => toggleFavorite(planet)}
-                style={{
-                  backgroundColor: favorites.some((fav) => fav.url === planet.url) ? 'red' : 'gray',
-                  color: 'white',
-                  padding: '10px',
-                  margin: '10px',
-                  borderRadius: '5px',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                {favorites.some((fav) => fav.url === planet.url) ? 'Remove from Favorites' : 'Add to Favorites'}
-              </button>
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );

@@ -5,8 +5,10 @@ import { useNavigate } from 'react-router-dom'; // Afegir el hook useNavigate
 function Starships() {
   const [starships, setStarships] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1); // Pàgina actual
+  const itemsPerPage = 10; // Nombre d'elements per pàgina (10 naus)
   const { favorites, toggleFavorite } = useContext(FavoritesContext);
-  const navigate = useNavigate(); // Instanciar el hook de navegaicó
+  const navigate = useNavigate(); // Instanciar el hook de navegació
 
   // Funció per obtenir totes les naus
   const fetchAllStarships = async () => {
@@ -40,6 +42,20 @@ function Starships() {
     fetchAllStarships(); // Carregar totes les naus quan es renderitza el component
   }, []);
 
+  // Calcular quines naus es mostren a la pàgina actual
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentStarships = starships.slice(startIndex, endIndex);
+
+  // Funció per canviar de pàgina
+  const changePage = (page) => {
+    setCurrentPage(page);
+  };
+
+  // Generar botons de paginació
+  const totalPages = Math.ceil(starships.length / itemsPerPage);
+  const paginationButtons = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   // Funció per mostrar els detalls de la nau
   const showDetails = (starship) => {
     navigate(`/starships/${starship.name}`, { state: { starship } });
@@ -48,45 +64,72 @@ function Starships() {
   return (
     <div>
       <h2>STARSHIPS</h2>
-      {loading ? (<p>Loading starships...</p>) : (
-        <ul className="display-elements">
-          {starships.map((starship) => (
-            <li key={starship.url}>
-              <h3>{starship.name}</h3>
-              <p>Model: {starship.model}</p>
-              <p>Manufacturer: {starship.manufacturer}</p>
-              <p>Cost: {starship.cost_in_credits} credits</p>
+      {loading ? (
+        <p>Loading starships...</p>
+      ) : (
+        <>
+          <ul className="display-elements">
+            {currentStarships.map((starship) => (
+              <li key={starship.url}>
+                <h3>{starship.name}</h3>
+                <p>Model: {starship.model}</p>
+                <p>Manufacturer: {starship.manufacturer}</p>
+                <p>Cost: {starship.cost_in_credits} credits</p>
+                <button
+                  onClick={() => showDetails(starship)} // Navegar als detalls
+                  style={{
+                    backgroundColor: 'gray',
+                    color: 'white',
+                    padding: '10px',
+                    margin: '10px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  Show Details
+                </button>
+                <button
+                  onClick={() => toggleFavorite(starship)}
+                  style={{
+                    backgroundColor: favorites.some((fav) => fav.url === starship.url) ? 'red' : 'gray',
+                    color: 'white',
+                    padding: '10px',
+                    margin: '10px',
+                    borderRadius: '5px',
+                    border: 'none',
+                    cursor: 'pointer',
+                  }}
+                >
+                  {favorites.some((fav) => fav.url === starship.url)
+                    ? 'Remove from Favorites'
+                    : 'Add to Favorites'}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          {/* Botons de paginació */}
+          <div className="pagination">
+            {paginationButtons.map((page) => (
               <button
-                onClick={() => showDetails(starship)} // Navegar als detalls
+                key={page}
+                onClick={() => changePage(page)}
                 style={{
-                  backgroundColor: 'gray',
-                  color: 'white',
+                  margin: '5px',
                   padding: '10px',
-                  margin: '10px',
+                  backgroundColor: page === currentPage ? 'blue' : 'gray',
+                  color: 'white',
                   borderRadius: '5px',
                   border: 'none',
                   cursor: 'pointer',
                 }}
               >
-                Show Details
+                {page}
               </button>
-              <button
-                onClick={() => toggleFavorite(starship)}
-                style={{
-                  backgroundColor: favorites.some((fav) => fav.url === starship.url) ? 'red' : 'gray',
-                  color: 'white',
-                  padding: '10px',
-                  margin: '10px',
-                  borderRadius: '5px',
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                {favorites.some((fav) => fav.url === starship.url) ? 'Remove from Favorites' : 'Add to Favorites'}
-              </button>
-            </li>
-          ))}
-        </ul>
+            ))}
+          </div>
+        </>
       )}
     </div>
   );
