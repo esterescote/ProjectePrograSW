@@ -1,10 +1,17 @@
+// Main task: The `Films` component fetches a list of Star Wars films from SWAPI, enhances the data 
+// with posters and ratings from TMDB, and displays them. Users can view details or mark films as favorites.
+// Structure: 
+// - Data fetching and state management with React hooks (useState, useEffect).
+// - Favorites management using a context (FavoritesContext).
+// - Navigation to details page using `useNavigate` from `react-router-dom`.
+
 import React, { useState, useEffect, useContext } from 'react';
-import { FavoritesContext } from '../context/FavoritesContext';  // Si estàs utilitzant aquest context
-import { useNavigate } from 'react-router-dom';
+import { FavoritesContext } from '../context/FavoritesContext'; // Context to manage favorite films
+import { useNavigate } from 'react-router-dom'; // Hook for navigation
 
-const TMDB_API_KEY = '4d3cb710ab798774158802e72c50dfa2'; // Substitueix per la teva clau d'API
+const TMDB_API_KEY = '4d3cb710ab798774158802e72c50dfa2'; // API key for TMDB
 
-// Mapeja els títols de les pel·lícules de Star Wars amb els seus IDs a TMDB
+// Maps Star Wars movie titles to their corresponding IDs in TMDB
 const starWarsMovieIds = {
   "A New Hope": 11,
   "The Empire Strikes Back": 1891,
@@ -16,24 +23,26 @@ const starWarsMovieIds = {
 };
 
 function Films() {
-  const [films, setFilms] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const { favorites, toggleFavorite } = useContext(FavoritesContext);
-  const navigate = useNavigate();
+  const [films, setFilms] = useState([]); // Holds the list of films with additional data
+  const [loading, setLoading] = useState(true); // Indicates whether data is being loaded
+  const { favorites, toggleFavorite } = useContext(FavoritesContext); // Access favorites and toggle functionality
+  const navigate = useNavigate(); // Hook to navigate between pages
 
+  // Effect to fetch films when the component mounts
   useEffect(() => {
     const fetchFilms = async () => {
       try {
-        // Obtenir les pel·lícules de SWAPI
+        // Fetches films from SWAPI (Star Wars API)
         const swapiResponse = await fetch('https://swapi.py4e.com/api/films/');
         const swapiData = await swapiResponse.json();
 
-        // Afegir informació de TMDB a cada pel·lícula utilitzant l'ID
+        // Adds additional details (e.g., poster, rating) from TMDB
         const tmdbPromises = swapiData.results.map(async (film) => {
-          const tmdbMovieId = starWarsMovieIds[film.title];  // Obtenir l'ID de TMDB per cada pel·lícula
+          const tmdbMovieId = starWarsMovieIds[film.title]; // Get TMDB ID for the film
 
-          if (!tmdbMovieId) return { ...film }; // Si no trobem l'ID, retornem la pel·lícula original sense TMDB
+          if (!tmdbMovieId) return { ...film }; // If no TMDB ID, return the film as is
 
+          // Fetch data from TMDB for the corresponding movie
           const tmdbResponse = await fetch(
             `https://api.themoviedb.org/3/movie/${tmdbMovieId}?api_key=${TMDB_API_KEY}`
           );
@@ -42,24 +51,25 @@ function Films() {
           return {
             ...film,
             poster: tmdbData?.poster_path
-              ? `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}`
+              ? `https://image.tmdb.org/t/p/w500${tmdbData.poster_path}` // Adds poster image
               : null,
-            rating: tmdbData?.vote_average || 0,  // Afegir la valoració de TMDB
+            rating: tmdbData?.vote_average || 0, // Adds rating from TMDB
           };
         });
 
-        const filmsWithImages = await Promise.all(tmdbPromises);
-        setFilms(filmsWithImages);
-        setLoading(false);
+        const filmsWithImages = await Promise.all(tmdbPromises); // Waits for all promises to resolve
+        setFilms(filmsWithImages); // Updates the films state
+        setLoading(false); // Stops the loading indicator
       } catch (error) {
-        console.error('Error fetching films:', error);
+        console.error('Error fetching films:', error); // Logs any errors
         setLoading(false);
       }
     };
 
-    fetchFilms();
+    fetchFilms(); // Fetches films when the component mounts
   }, []);
 
+  // Navigate to film details page
   const handleShowDetails = (film) => {
     navigate(`/films/${film.title}`, { state: { film } });
   };
@@ -68,22 +78,24 @@ function Films() {
     <div>
       <h2>FILMS</h2>
       {loading ? (
-        <p className='breu'>Loading films...</p>
+        <p>Loading films...</p> // Displays a loading message
       ) : (
         <ul className="display-elements">
+          {/* Maps over the films array to display each film */}
           {films.map((film) => (
             <li key={film.url} style={{ marginBottom: '20px' }}>
               <h3>{film.title}</h3>
               {film.poster && (
                 <img
-                  src={film.poster}
+                  src={film.poster} // Displays the film's poster
                   alt={film.title}
                   style={{ width: '200px', height: 'auto', marginBottom: '10px' }}
                 />
               )}
-              <p className='breu'><strong>Episode: </strong>{film.episode_id}</p>
-              <p className='breu'><strong>Director: </strong>{film.director}</p>
-              <div className='button-DF'>
+              <p><strong>Episode:</strong> {film.episode_id}</p>
+              <p><strong>Director:</strong> {film.director}</p>
+              <div>
+                {/* Button to show film details */}
                 <button
                   onClick={() => handleShowDetails(film)}
                   style={{
@@ -98,6 +110,7 @@ function Films() {
                 >
                   Show Details
                 </button>
+                {/* Button to toggle favorites */}
                 <button
                   onClick={() => toggleFavorite(film)}
                   style={{
@@ -117,7 +130,6 @@ function Films() {
                     : 'Add to Favorites'}
                 </button>
               </div>
-              
             </li>
           ))}
         </ul>
