@@ -116,7 +116,7 @@ function PlanetsDetails() {
       >
         {favorites.some((fav) => fav.url === planet.url)
           ? 'Remove from Favorites' // If already a favorite, show this label
-          : 'Add to Favorites'} // Otherwise, show this label
+          : 'Add to Favorites'} {/* If not a favorite, show this label */}
       </button>
 
       {/* Display planet's basic information */}

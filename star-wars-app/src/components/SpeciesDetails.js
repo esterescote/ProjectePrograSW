@@ -100,7 +100,7 @@ function SpeciesDetails() {
       >
         {favorites.some((fav) => fav.url === specie.url)
           ? 'Remove from Favorites' // If species is in favorites, display 'Remove from Favorites'
-          : 'Add to Favorites'} // If species is not in favorites, display 'Add to Favorites'
+          : 'Add to Favorites'} {/* If species is not in favorites, display 'Add to Favorites' */}
       </button>
 
       {/* Display species details */}
